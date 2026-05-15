@@ -1,0 +1,509 @@
+@import "tailwindcss";
+
+/* ============================================
+   Guess Who Online — Global Styles
+   ============================================ */
+
+:root {
+  /* Primary palette */
+  --color-primary: 262 83% 58%;
+  --color-primary-light: 262 83% 68%;
+  --color-secondary: 199 89% 48%;
+  --color-accent: 45 93% 58%;
+
+  /* Backgrounds */
+  --color-bg: 230 25% 10%;
+  --color-bg-surface: 230 20% 15%;
+  --color-bg-card: 230 18% 18%;
+  --color-bg-hover: 230 18% 22%;
+
+  /* Text */
+  --color-text: 0 0% 95%;
+  --color-text-muted: 230 10% 60%;
+  --color-text-dim: 230 10% 40%;
+
+  /* Status */
+  --color-success: 142 71% 45%;
+  --color-danger: 0 72% 51%;
+  --color-warning: 45 93% 58%;
+
+  /* Borders */
+  --color-border: 230 15% 25%;
+  --color-border-light: 230 15% 30%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: hsl(var(--color-bg));
+  color: hsl(var(--color-text));
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   Animated background gradient
+   ============================================ */
+
+.bg-animated {
+  background: linear-gradient(
+    135deg,
+    hsl(230 25% 10%) 0%,
+    hsl(262 30% 12%) 25%,
+    hsl(230 25% 10%) 50%,
+    hsl(199 30% 12%) 75%,
+    hsl(230 25% 10%) 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ============================================
+   Glass card effect
+   ============================================ */
+
+.glass {
+  background: hsla(230, 20%, 15%, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsla(230, 15%, 30%, 0.5);
+  border-radius: 1rem;
+}
+
+.glass-strong {
+  background: hsla(230, 20%, 15%, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid hsla(230, 15%, 30%, 0.6);
+  border-radius: 1rem;
+}
+
+/* ============================================
+   Character card styles
+   ============================================ */
+
+.character-card {
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: hsl(var(--color-bg-card));
+  border: 2px solid hsl(var(--color-border));
+}
+
+.character-card:hover:not(.crossed-out) {
+  transform: translateY(-4px) scale(1.02);
+  border-color: hsl(var(--color-primary));
+  box-shadow: 0 8px 30px hsla(262, 83%, 58%, 0.2);
+}
+
+.character-card.crossed-out {
+  opacity: 0.3;
+  filter: grayscale(80%);
+  transform: scale(0.95);
+}
+
+.character-card.crossed-out::after {
+  content: '✕';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 900;
+  color: hsl(var(--color-danger));
+  background: hsla(0, 0%, 0%, 0.3);
+  pointer-events: none;
+}
+
+/* ============================================
+   Pulse animation for turn indicator
+   ============================================ */
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px hsla(var(--color-accent), 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px hsla(var(--color-accent), 0.8),
+                0 0 40px hsla(var(--color-accent), 0.3);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Button styles
+   ============================================ */
+
+.btn-primary {
+  background: linear-gradient(135deg, hsl(var(--color-primary)), hsl(var(--color-primary-light)));
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px hsla(262, 83%, 58%, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: hsl(var(--color-bg-card));
+  color: hsl(var(--color-text));
+  border: 1px solid hsl(var(--color-border));
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+  background: hsl(var(--color-bg-hover));
+  border-color: hsl(var(--color-border-light));
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, hsl(142, 71%, 40%), hsl(142, 71%, 50%));
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px hsla(142, 71%, 45%, 0.4);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, hsl(0, 72%, 46%), hsl(0, 72%, 56%));
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px hsla(0, 72%, 51%, 0.4);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   Input styles
+   ============================================ */
+
+.input {
+  background: hsl(var(--color-bg-card));
+  border: 1px solid hsl(var(--color-border));
+  color: hsl(var(--color-text));
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: hsl(var(--color-primary));
+  box-shadow: 0 0 0 3px hsla(262, 83%, 58%, 0.15);
+}
+
+.input::placeholder {
+  color: hsl(var(--color-text-dim));
+}
+
+/* ============================================
+   Slide in animation
+   ============================================ */
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInUp 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* ============================================
+   Scrollbar
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--color-bg));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--color-border));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--color-border-light));
+}
+
+/* ============================================
+   Secret character badge
+   ============================================ */
+
+.secret-badge {
+  background: linear-gradient(135deg, hsl(var(--color-primary)), hsl(var(--color-secondary)));
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 20px hsla(262, 83%, 58%, 0.25);
+}
+
+/* ============================================
+   Responsive grid
+   ============================================ */
+
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 0.5rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.character-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 1023px) {
+  .character-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .character-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 0.375rem;
+  }
+}
+
+/* ============================================
+   Modal overlay
+   ============================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: hsla(0, 0%, 0%, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: hsl(var(--color-bg-surface));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideInUp 0.3s ease;
+}
+
+/* ============================================
+   Tooltip / badge
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-success {
+  background: hsla(142, 71%, 45%, 0.15);
+  color: hsl(var(--color-success));
+}
+
+.badge-warning {
+  background: hsla(45, 93%, 58%, 0.15);
+  color: hsl(var(--color-warning));
+}
+
+.badge-danger {
+  background: hsla(0, 72%, 51%, 0.15);
+  color: hsl(var(--color-danger));
+}
+
+.badge-primary {
+  background: hsla(262, 83%, 58%, 0.15);
+  color: hsl(var(--color-primary));
+}
+
+/* ============================================
+   Question bubbles
+   ============================================ */
+
+.question-bubble {
+  background: hsl(var(--color-bg-card));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  animation: slideInUp 0.3s ease;
+}
+
+.question-bubble .answer {
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+.question-bubble .answer.yes {
+  color: hsl(var(--color-success));
+}
+
+.question-bubble .answer.no {
+  color: hsl(var(--color-danger));
+}
+
+/* ============================================
+   Toggle switch
+   ============================================ */
+
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: hsl(var(--color-bg-card));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle.active {
+  background: hsl(var(--color-primary));
+  border-color: hsl(var(--color-primary));
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle.active::after {
+  transform: translateX(20px);
+}
