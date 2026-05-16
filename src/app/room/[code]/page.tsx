@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { useGameState } from "@/hooks/use-game-state";
 import WaitingRoom from "@/components/game/waiting-room";
@@ -13,19 +13,46 @@ export default function RoomPage() {
   const isNewRoom = rawCode === "NEW";
   const game = useGameState();
 
-  // Read name from sessionStorage (set by the homepage before navigating)
-  const storedName = typeof window !== "undefined"
-    ? sessionStorage.getItem("gw-player-name")
-    : null;
-
-  // If no name was stored (e.g. user clicked a shared link directly),
-  // gate the join behind a name entry prompt.
+  // ── State ──────────────────────────────────────────────────────────
+  // IMPORTANT: We NEVER read sessionStorage during render.
+  // Doing so causes a hydration mismatch (server has no sessionStorage →
+  // renders one UI; client has it → renders different UI). React's
+  // hydration error recovery breaks event handlers, causing "button does
+  // nothing" symptoms.
+  //
+  // Instead, storedName starts as null on BOTH server and client,
+  // and we read sessionStorage in a useEffect (client-only).
+  const [storedName, setStoredName] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
   const [enteredName, setEnteredName] = useState("");
   const [nameSubmitted, setNameSubmitted] = useState(false);
   const [nameError, setNameError] = useState("");
+  const joinSentRef = useRef(false);
 
-  // The effective name: either from sessionStorage or from the entry form
-  const needsNameEntry = !storedName && !nameSubmitted && !isNewRoom;
+  // ── Effect 0: Detect bfcache restoration (Ctrl+Shift+T) ───────────
+  // When a tab is restored from bfcache, JS state is frozen/stale and
+  // the socket is dead. Force a clean reload.
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
+  // ── Effect 1: Read sessionStorage after hydration ─────────────────
+  useEffect(() => {
+    const name = sessionStorage.getItem("gw-player-name");
+    if (name) {
+      setStoredName(name);
+    }
+    setHydrated(true);
+  }, []);
+
+  // Derived state (only meaningful after hydration)
+  const needsNameEntry = hydrated && !storedName && !nameSubmitted && !isNewRoom;
   const activeName = storedName || (nameSubmitted ? enteredName.trim() : "Player");
 
   const handleNameSubmit = () => {
@@ -34,26 +61,43 @@ export default function RoomPage() {
       return;
     }
     setNameError("");
-    sessionStorage.setItem("gw-player-name", enteredName.trim());
+    const name = enteredName.trim();
+    sessionStorage.setItem("gw-player-name", name);
+    setStoredName(name);
     setNameSubmitted(true);
   };
 
-  // Create or join room once the socket is ready AND we have a name.
-  // No ref guard needed — cleanup clears the timer, so Strict Mode's
-  // mount→cleanup→mount cycle works correctly: T1 starts, T1 cleared, T2 starts, T2 fires.
+  // ── Effect 2: Auto-join/create once we have a name + socket ───────
+  // Uses a retry interval to be immune to React timing edge cases
+  // (Strict Mode double-mount, tab restoration, socket connect delays).
   useEffect(() => {
-    if (needsNameEntry) return; // Wait for name entry
+    if (!hydrated) return;
+    if (needsNameEntry) return;
+    if (joinSentRef.current) return;
 
-    const timer = setTimeout(() => {
+    const tryJoin = () => {
+      if (joinSentRef.current) return true;
+      if (!game.myId) return false; // socket not connected yet
+
+      joinSentRef.current = true;
       if (isNewRoom) {
         game.createRoom(activeName);
       } else {
         game.joinRoom(rawCode, activeName);
       }
+      return true;
+    };
+
+    // Try immediately
+    if (tryJoin()) return;
+
+    // Retry every 300ms until socket is connected
+    const interval = setInterval(() => {
+      if (tryJoin()) clearInterval(interval);
     }, 300);
 
-    return () => clearTimeout(timer);
-  }, [needsNameEntry]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => clearInterval(interval);
+  }, [hydrated, needsNameEntry, game.myId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the URL from /room/NEW to /room/ACTUAL_CODE once the room is created
   useEffect(() => {
@@ -64,7 +108,69 @@ export default function RoomPage() {
 
   const displayCode = game.roomCode || rawCode;
 
-  // Name entry gate — shown when user arrives via shared link without ?name=
+  // Before hydration, show a brief connecting state (server and client
+  // both render this, so no hydration mismatch)
+  if (!hydrated) {
+    return (
+      <main
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              fontSize: "2.5rem",
+              marginBottom: "1rem",
+              animation: "pulse 1.5s ease-in-out infinite",
+            }}
+          >
+            🎭
+          </div>
+          <p style={{ color: "hsl(230, 10%, 50%)", fontSize: "0.9rem" }}>
+            Connecting...
+          </p>
+          {/* Refresh prompt — appears after 3s via pure CSS (works even if
+              React is frozen from bfcache). Uses <a href=""> for a no-JS reload. */}
+          <div
+            style={{
+              marginTop: "2rem",
+              opacity: 0,
+              animation: "fadeIn 0.4s ease forwards",
+              animationDelay: "3s",
+            }}
+          >
+            <p style={{ color: "hsl(230, 10%, 45%)", fontSize: "0.85rem", marginBottom: "0.75rem" }}>
+              Taking too long?
+            </p>
+            <a
+              href=""
+              style={{
+                display: "inline-block",
+                padding: "0.6rem 1.5rem",
+                borderRadius: "0.5rem",
+                background: "linear-gradient(135deg, hsl(220, 83%, 68%), hsl(199, 89%, 58%))",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                transition: "opacity 0.2s",
+              }}
+            >
+              🔄 Refresh Page
+            </a>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Name entry gate — shown when user arrives via shared link without a stored name
   if (needsNameEntry) {
     return (
       <main

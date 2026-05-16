@@ -192,8 +192,50 @@ app.prepare().then(() => {
       }
 
       if (room.players.size >= 2 && !room.players.has(socket.id)) {
-        socket.emit("error", { message: "Room is full" });
-        return;
+        // Check if a disconnected player can be replaced (tab-close reconnection)
+        const disconnectedEntry = Array.from(room.players.entries())
+          .find(([, p]) => !p.connected);
+
+        if (!disconnectedEntry) {
+          socket.emit("error", { message: "Room is full" });
+          return;
+        }
+
+        // Take over the disconnected player's slot
+        const [oldId, oldPlayer] = disconnectedEntry;
+
+        // Transfer player data to new socket ID
+        const newPlayer = {
+          id: socket.id,
+          name: playerName || oldPlayer.name,
+          ready: oldPlayer.ready,
+          connected: true,
+        };
+
+        // Remove old entry, add new one
+        room.players.delete(oldId);
+        room.players.set(socket.id, newPlayer);
+
+        // Transfer game state references
+        if (room.secretCharacters.has(oldId)) {
+          room.secretCharacters.set(socket.id, room.secretCharacters.get(oldId));
+          room.secretCharacters.delete(oldId);
+        }
+        if (room.crossedOut.has(oldId)) {
+          room.crossedOut.set(socket.id, room.crossedOut.get(oldId));
+          room.crossedOut.delete(oldId);
+        }
+        if (room.currentTurn === oldId) {
+          room.currentTurn = socket.id;
+        }
+        if (room.winner === oldId) room.winner = socket.id;
+        if (room.loser === oldId) room.loser = socket.id;
+        if (room.rematchRequests.has(oldId)) {
+          room.rematchRequests.delete(oldId);
+          room.rematchRequests.add(socket.id);
+        }
+
+        console.log(`[room] ${playerName} reconnected to room ${code} (took over disconnected slot)`);
       }
 
       if (currentRoom && currentRoom !== code) {

@@ -243,7 +243,23 @@ export function useGameState(): GameData {
     });
 
     return () => {
-      socket.removeAllListeners();
+      // Remove only OUR listeners — never use removeAllListeners() as it
+      // destroys socket.io's internal handlers and breaks the connection
+      // (especially during React Strict Mode's mount→cleanup→remount cycle).
+      socket.off("connect");
+      socket.off("room-created");
+      socket.off("player-joined");
+      socket.off("room-state");
+      socket.off("settings-updated");
+      socket.off("game-started");
+      socket.off("question-asked");
+      socket.off("question-answered");
+      socket.off("game-over");
+      socket.off("rematch-requested");
+      socket.off("game-restarted");
+      socket.off("player-disconnected");
+      socket.off("player-reconnected");
+      socket.off("error");
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

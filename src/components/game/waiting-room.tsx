@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { GameData } from "@/hooks/use-game-state";
 
 interface WaitingRoomProps {
@@ -11,9 +11,12 @@ interface WaitingRoomProps {
 export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/room/${roomCode}`
-    : "";
+  // Compute share URL in useEffect to avoid hydration mismatch
+  // (server has no window.location.origin)
+  const [shareUrl, setShareUrl] = useState("");
+  useEffect(() => {
+    setShareUrl(`${window.location.origin}/room/${roomCode}`);
+  }, [roomCode]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl);
