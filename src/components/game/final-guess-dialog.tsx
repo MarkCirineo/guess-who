@@ -30,7 +30,7 @@ export default function FinalGuessDialog({ game, onClose }: FinalGuessDialogProp
     <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-content"
-        style={{ maxWidth: "700px", maxHeight: "85vh" }}
+        style={{ maxWidth: "750px", maxHeight: "85vh" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
@@ -76,11 +76,10 @@ export default function FinalGuessDialog({ game, onClose }: FinalGuessDialogProp
             </p>
 
             <div
+              className="final-guess-grid"
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
                 gap: "0.5rem",
-                maxHeight: "50vh",
+                maxHeight: "55vh",
                 overflowY: "auto",
                 padding: "0.25rem",
               }}
