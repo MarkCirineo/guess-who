@@ -16,8 +16,8 @@ export default function Home() {
       setError("Enter your name");
       return;
     }
-    // Navigate to room page with create=true flag
-    router.push(`/room/new?name=${encodeURIComponent(playerName.trim())}`);
+    sessionStorage.setItem("gw-player-name", playerName.trim());
+    router.push("/room/new");
   };
 
   const handleJoin = () => {
@@ -29,11 +29,8 @@ export default function Home() {
       setError("Enter a room code");
       return;
     }
-    router.push(
-      `/room/${roomCode.toUpperCase().trim()}?name=${encodeURIComponent(
-        playerName.trim()
-      )}`
-    );
+    sessionStorage.setItem("gw-player-name", playerName.trim());
+    router.push(`/room/${roomCode.toUpperCase().trim()}`);
   };
 
   return (

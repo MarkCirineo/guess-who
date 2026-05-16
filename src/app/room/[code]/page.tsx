@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useGameState } from "@/hooks/use-game-state";
 import WaitingRoom from "@/components/game/waiting-room";
 import GameBoard from "@/components/game/game-board";
@@ -9,21 +9,24 @@ import GameOverScreen from "@/components/game/game-over-screen";
 
 export default function RoomPage() {
   const params = useParams();
-  const searchParams = useSearchParams();
   const rawCode = (params.code as string)?.toUpperCase();
   const isNewRoom = rawCode === "NEW";
-  const nameFromUrl = searchParams.get("name");
   const game = useGameState();
 
-  // If no name was provided in the URL (e.g. user clicked a shared link),
+  // Read name from sessionStorage (set by the homepage before navigating)
+  const storedName = typeof window !== "undefined"
+    ? sessionStorage.getItem("gw-player-name")
+    : null;
+
+  // If no name was stored (e.g. user clicked a shared link directly),
   // gate the join behind a name entry prompt.
   const [enteredName, setEnteredName] = useState("");
   const [nameSubmitted, setNameSubmitted] = useState(false);
   const [nameError, setNameError] = useState("");
 
-  // The effective name: either from URL params or from the entry form
-  const needsNameEntry = !nameFromUrl && !nameSubmitted && !isNewRoom;
-  const activeName = nameFromUrl || (nameSubmitted ? enteredName : "Player");
+  // The effective name: either from sessionStorage or from the entry form
+  const needsNameEntry = !storedName && !nameSubmitted && !isNewRoom;
+  const activeName = storedName || (nameSubmitted ? enteredName.trim() : "Player");
 
   const handleNameSubmit = () => {
     if (!enteredName.trim()) {
@@ -31,6 +34,7 @@ export default function RoomPage() {
       return;
     }
     setNameError("");
+    sessionStorage.setItem("gw-player-name", enteredName.trim());
     setNameSubmitted(true);
   };
 
@@ -54,9 +58,9 @@ export default function RoomPage() {
   // Update the URL from /room/NEW to /room/ACTUAL_CODE once the room is created
   useEffect(() => {
     if (isNewRoom && game.roomCode) {
-      window.history.replaceState(null, "", `/room/${game.roomCode}?name=${encodeURIComponent(activeName)}`);
+      window.history.replaceState(null, "", `/room/${game.roomCode}`);
     }
-  }, [game.roomCode, isNewRoom, activeName]);
+  }, [game.roomCode, isNewRoom]);
 
   const displayCode = game.roomCode || rawCode;
 
