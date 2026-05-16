@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { GameData } from "@/hooks/use-game-state";
 import { characters } from "@/lib/characters";
 import CharacterCard from "./character-card";
@@ -9,6 +10,7 @@ import FinalGuessDialog from "./final-guess-dialog";
 import SuggestedQuestions from "./suggested-questions";
 
 export default function GameBoard({ game }: { game: GameData }) {
+  const router = useRouter();
   const [showGuessDialog, setShowGuessDialog] = useState(false);
 
   const isQuestionsMode = game.settings.mode === "with-questions";
@@ -39,6 +41,39 @@ export default function GameBoard({ game }: { game: GameData }) {
           gap: "0.5rem",
         }}
       >
+        {/* Home Button */}
+        <button
+          onClick={() => router.push("/")}
+          style={{
+            background: "transparent",
+            border: "1px solid hsl(230, 15%, 25%)",
+            color: "hsl(230, 10%, 60%)",
+            padding: "0.4rem 0.75rem",
+            borderRadius: "0.5rem",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.35rem",
+            transition: "all 0.2s ease",
+            flexShrink: 0,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "hsl(230, 15%, 35%)";
+            e.currentTarget.style.color = "hsl(0, 0%, 95%)";
+            e.currentTarget.style.background = "hsl(230, 18%, 18%)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "hsl(230, 15%, 25%)";
+            e.currentTarget.style.color = "hsl(230, 10%, 60%)";
+            e.currentTarget.style.background = "transparent";
+          }}
+          id="home-btn"
+        >
+          ← Home
+        </button>
+
         {/* Secret Character */}
         {game.mySecret && (
           <div className="secret-badge">
