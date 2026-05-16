@@ -64,7 +64,7 @@ export default function Home() {
           style={{
             fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 900,
-            background: "linear-gradient(135deg, hsl(262, 83%, 68%), hsl(199, 89%, 58%), hsl(45, 93%, 58%))",
+            background: "linear-gradient(135deg, hsl(220, 83%, 68%), hsl(199, 89%, 58%), hsl(45, 93%, 58%))",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",

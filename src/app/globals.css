@@ -6,8 +6,8 @@
 
 :root {
   /* Primary palette */
-  --color-primary: 262 83% 58%;
-  --color-primary-light: 262 83% 68%;
+  --color-primary: 220 83% 58%;
+  --color-primary-light: 220 83% 68%;
   --color-secondary: 199 89% 48%;
   --color-accent: 45 93% 58%;
 
@@ -60,7 +60,7 @@ body {
   background: linear-gradient(
     135deg,
     hsl(230 25% 10%) 0%,
-    hsl(262 30% 12%) 25%,
+    hsl(220 30% 12%) 25%,
     hsl(230 25% 10%) 50%,
     hsl(199 30% 12%) 75%,
     hsl(230 25% 10%) 100%
@@ -112,7 +112,7 @@ body {
 .character-card:hover:not(.crossed-out) {
   transform: translateY(-4px) scale(1.02);
   border-color: hsl(var(--color-primary));
-  box-shadow: 0 8px 30px hsla(262, 83%, 58%, 0.2);
+  box-shadow: 0 8px 30px hsla(220, 83%, 58%, 0.2);
 }
 
 .character-card.crossed-out {
@@ -175,7 +175,7 @@ body {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px hsla(262, 83%, 58%, 0.4);
+  box-shadow: 0 4px 20px hsla(220, 83%, 58%, 0.4);
 }
 
 .btn-primary:active {
@@ -277,7 +277,7 @@ body {
 
 .input:focus {
   border-color: hsl(var(--color-primary));
-  box-shadow: 0 0 0 3px hsla(262, 83%, 58%, 0.15);
+  box-shadow: 0 0 0 3px hsla(220, 83%, 58%, 0.15);
 }
 
 .input::placeholder {
@@ -344,7 +344,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 4px 20px hsla(262, 83%, 58%, 0.25);
+  box-shadow: 0 4px 20px hsla(220, 83%, 58%, 0.25);
 }
 
 /* ============================================
@@ -442,7 +442,7 @@ body {
 }
 
 .badge-primary {
-  background: hsla(262, 83%, 58%, 0.15);
+  background: hsla(220, 83%, 58%, 0.15);
   color: hsl(var(--color-primary));
 }
 

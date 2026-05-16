@@ -22,14 +22,14 @@ export default function GameOverScreen({ game }: { game: GameData }) {
             angle: 60,
             spread: 55,
             origin: { x: 0 },
-            colors: ["#a855f7", "#3b82f6", "#eab308"],
+            colors: ["#4b83f0", "#3b82f6", "#eab308"],
           });
           confetti({
             particleCount: 3,
             angle: 120,
             spread: 55,
             origin: { x: 1 },
-            colors: ["#a855f7", "#3b82f6", "#eab308"],
+            colors: ["#4b83f0", "#3b82f6", "#eab308"],
           });
 
           if (Date.now() < end) {

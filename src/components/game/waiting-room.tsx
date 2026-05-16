@@ -56,7 +56,7 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
               fontSize: "2.5rem",
               fontWeight: 900,
               letterSpacing: "0.3em",
-              background: "linear-gradient(135deg, hsl(262, 83%, 68%), hsl(199, 89%, 58%))",
+              background: "linear-gradient(135deg, hsl(220, 83%, 68%), hsl(199, 89%, 58%))",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",

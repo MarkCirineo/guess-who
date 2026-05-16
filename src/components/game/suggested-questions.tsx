@@ -86,8 +86,8 @@ export default function SuggestedQuestions({
               }}
               onMouseEnter={(e) => {
                 if (isClickable) {
-                  (e.target as HTMLElement).style.borderColor = "hsl(262, 83%, 58%)";
-                  (e.target as HTMLElement).style.background = "hsl(262, 30%, 20%)";
+                  (e.target as HTMLElement).style.borderColor = "hsl(220, 83%, 58%)";
+                  (e.target as HTMLElement).style.background = "hsl(220, 30%, 20%)";
                 }
               }}
               onMouseLeave={(e) => {

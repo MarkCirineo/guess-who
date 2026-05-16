@@ -36,8 +36,8 @@ export default function CharacterCard({
       style={{
         ...(isSecret
           ? {
-              borderColor: "hsl(262, 83%, 58%)",
-              boxShadow: "0 0 15px hsla(262, 83%, 58%, 0.3)",
+              borderColor: "hsl(220, 83%, 58%)",
+              boxShadow: "0 0 15px hsla(220, 83%, 58%, 0.3)",
             }
           : {}),
         ...(isSelected
@@ -98,7 +98,7 @@ export default function CharacterCard({
               width: 20,
               height: 20,
               borderRadius: "50%",
-              background: "hsl(262, 83%, 58%)",
+              background: "hsl(220, 83%, 58%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

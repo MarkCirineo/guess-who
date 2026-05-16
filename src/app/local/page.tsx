@@ -237,7 +237,7 @@ export default function LocalPage() {
             style={{
               fontSize: "2rem",
               fontWeight: 900,
-              background: "linear-gradient(135deg, hsl(262, 83%, 68%), hsl(199, 89%, 58%))",
+              background: "linear-gradient(135deg, hsl(220, 83%, 68%), hsl(199, 89%, 58%))",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
