@@ -183,9 +183,20 @@ export function useGameState(): GameData {
       setWinner(result.winner);
       setWinnerName(result.winnerName);
       setLoserName(result.loserName);
-      setWinnerCharacter(result.winnerCharacter);
-      setLoserCharacter(result.loserCharacter);
-      setGuessedCharacter(result.guessedCharacter);
+      // Resolve against local character data to get full objects with avatar paths
+      // (the server only sends {id, name} without avatars)
+      const winChar = result.winnerCharacter
+        ? allCharacters.find(c => c.id === result.winnerCharacter.id) || result.winnerCharacter
+        : null;
+      const loseChar = result.loserCharacter
+        ? allCharacters.find(c => c.id === result.loserCharacter.id) || result.loserCharacter
+        : null;
+      const guessChar = result.guessedCharacter
+        ? allCharacters.find(c => c.id === result.guessedCharacter.id) || result.guessedCharacter
+        : null;
+      setWinnerCharacter(winChar);
+      setLoserCharacter(loseChar);
+      setGuessedCharacter(guessChar);
       setWasCorrect(result.correct);
     });
 
