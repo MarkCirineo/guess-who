@@ -191,7 +191,7 @@ export default function Home() {
               onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
               onKeyDown={(e) => e.key === "Enter" && handleJoin()}
               maxLength={6}
-              style={{ textTransform: "uppercase", letterSpacing: "0.2em", textAlign: "center", fontSize: "1.25rem", fontWeight: 700 }}
+              style={{ textTransform: "uppercase", letterSpacing: "0.15em", textAlign: "center" }}
               id="join-code-input"
             />
             {error && (
