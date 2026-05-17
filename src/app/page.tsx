@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -10,15 +10,18 @@ export default function Home() {
   const [playerName, setPlayerName] = useState("");
   const [roomCode, setRoomCode] = useState("");
   const [error, setError] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
 
-  const handleCreate = () => {
+  const handleCreate = useCallback(() => {
     if (!playerName.trim()) {
       setError("Enter your name");
       return;
     }
+    setIsCreating(true);
+    setError("");
     sessionStorage.setItem("gw-player-name", playerName.trim());
     router.push("/room/new");
-  };
+  }, [playerName, router]);
 
   const handleJoin = () => {
     if (!playerName.trim()) {
@@ -162,10 +165,28 @@ export default function Home() {
               <button
                 className="btn-primary"
                 onClick={handleCreate}
-                style={{ flex: 2 }}
+                disabled={isCreating}
+                style={{ flex: 2, position: "relative", opacity: isCreating ? 0.7 : 1 }}
                 id="create-room-submit"
               >
-                Create Room
+                {isCreating ? (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span
+                      style={{
+                        width: "1rem",
+                        height: "1rem",
+                        border: "2px solid rgba(255,255,255,0.3)",
+                        borderTopColor: "white",
+                        borderRadius: "50%",
+                        display: "inline-block",
+                        animation: "spin 0.6s linear infinite",
+                      }}
+                    />
+                    Creating…
+                  </span>
+                ) : (
+                  "Create Room"
+                )}
               </button>
             </div>
           </div>

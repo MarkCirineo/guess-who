@@ -302,5 +302,53 @@ export default function RoomPage() {
     return <GameBoard game={game} />;
   }
 
+  // Show loading state while creating a new room (before server assigns a code)
+  if (isNewRoom && !game.roomCode) {
+    return (
+      <main
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem",
+        }}
+      >
+        <div className="animate-slide-in" style={{ textAlign: "center" }}>
+          <div
+            style={{
+              width: "2.5rem",
+              height: "2.5rem",
+              border: "3px solid hsla(220, 83%, 68%, 0.2)",
+              borderTopColor: "hsl(220, 83%, 68%)",
+              borderRadius: "50%",
+              animation: "spin 0.7s linear infinite",
+              margin: "0 auto 1.25rem",
+            }}
+          />
+          <p
+            style={{
+              color: "hsl(230, 10%, 60%)",
+              fontSize: "1.1rem",
+              fontWeight: 600,
+            }}
+          >
+            Creating Room…
+          </p>
+          <p
+            style={{
+              color: "hsl(230, 10%, 40%)",
+              fontSize: "0.85rem",
+              marginTop: "0.5rem",
+            }}
+          >
+            Setting up your game
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   return <WaitingRoom game={game} roomCode={displayCode} />;
 }
