@@ -187,7 +187,6 @@ export default function GameBoard({ game }: { game: GameData }) {
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
-            overflow: "hidden",
           }}
         >
           {/* Suggested Questions (shown in both modes if enabled) */}

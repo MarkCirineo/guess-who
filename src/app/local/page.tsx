@@ -449,7 +449,7 @@ export default function LocalPage() {
       </header>
 
       {/* Board */}
-      <div style={{ flex: 1, padding: "0.75rem", display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+      <div style={{ flex: 1, padding: "0.75rem", display: "flex", flexDirection: "column", minHeight: 0 }}>
         {showSuggestions && currentPlayer && (
           <div
             style={{
