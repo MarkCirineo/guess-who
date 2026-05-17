@@ -29,6 +29,11 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
+        <script
+          defer
+          src="https://analytics.markcirineo.com/script.js"
+          data-website-id="806d2232-74df-4f1a-9460-2dbebbfe3955"
+        />
       </head>
       <body className="bg-animated">{children}</body>
     </html>
