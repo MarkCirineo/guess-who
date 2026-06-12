@@ -34,6 +34,11 @@ export default function RootLayout({
           src="https://analytics.markcirineo.com/script.js"
           data-website-id="806d2232-74df-4f1a-9460-2dbebbfe3955"
         />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8147469409497186"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="bg-animated">{children}</body>
     </html>

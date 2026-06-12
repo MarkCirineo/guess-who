@@ -252,7 +252,13 @@ export default function Home() {
           fontSize: "0.8rem",
         }}
       >
-        No account needed · Just create & play
+        No account needed · Just create &amp; play ·{" "}
+        <a
+          href="/privacy"
+          style={{ color: "hsl(230, 10%, 45%)", textDecoration: "underline" }}
+        >
+          Privacy Policy
+        </a>
       </p>
     </main>
   );
