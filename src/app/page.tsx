@@ -254,6 +254,13 @@ export default function Home() {
       >
         No account needed · Just create &amp; play ·{" "}
         <a
+          href="/about"
+          style={{ color: "hsl(230, 10%, 45%)", textDecoration: "underline" }}
+        >
+          About
+        </a>
+        {" · "}
+        <a
           href="/privacy"
           style={{ color: "hsl(230, 10%, 45%)", textDecoration: "underline" }}
         >
