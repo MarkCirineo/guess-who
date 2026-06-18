@@ -245,28 +245,57 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <p
+      <div
         style={{
           marginTop: "2rem",
-          color: "hsl(230, 10%, 35%)",
-          fontSize: "0.8rem",
+          textAlign: "center",
         }}
       >
-        No account needed · Just create &amp; play ·{" "}
-        <a
-          href="/about"
-          style={{ color: "hsl(230, 10%, 45%)", textDecoration: "underline" }}
+        <p
+          style={{
+            color: "hsl(230, 10%, 35%)",
+            fontSize: "0.8rem",
+          }}
         >
-          About
-        </a>
-        {" · "}
-        <a
-          href="/privacy"
-          style={{ color: "hsl(230, 10%, 45%)", textDecoration: "underline" }}
+          No account needed · Just create &amp; play ·{" "}
+          <a
+            href="/privacy"
+            style={{ color: "hsl(230, 10%, 45%)", textDecoration: "underline" }}
+          >
+            Privacy Policy
+          </a>
+        </p>
+        <p
+          style={{
+            color: "hsl(230, 10%, 30%)",
+            fontSize: "0.7rem",
+            marginTop: "0.4rem",
+          }}
         >
-          Privacy Policy
-        </a>
-      </p>
+          A game from{" "}
+          <a
+            href="https://arcadekit.games"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="network-link"
+            style={{ fontSize: "0.7rem" }}
+            id="arcadekit-footer-link"
+          >
+            ArcadeKit
+          </a>
+          {" · "}
+          <a
+            href="https://arcadekit.games"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="network-link"
+            style={{ fontSize: "0.7rem" }}
+            id="arcadekit-footer-more"
+          >
+            More Games →
+          </a>
+        </p>
+      </div>
     </main>
   );
 }

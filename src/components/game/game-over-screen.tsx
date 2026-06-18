@@ -218,6 +218,45 @@ export default function GameOverScreen({ game }: { game: GameData }) {
           </button>
         </div>
 
+        {/* ArcadeKit cross-promo */}
+        <div
+          className="animate-fade-in"
+          style={{
+            marginTop: "1rem",
+            animationDelay: "0.4s",
+            animationFillMode: "both",
+          }}
+        >
+          <div className="divider-text">or</div>
+          <a
+            href="https://arcadekit.games"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="network-link"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              padding: "0.75rem",
+              borderRadius: "0.75rem",
+              background: "hsla(230, 20%, 15%, 0.4)",
+              border: "1px solid hsla(230, 15%, 30%, 0.3)",
+              fontSize: "0.85rem",
+              textDecoration: "none",
+              transition: "all 0.2s ease",
+            }}
+            id="arcadekit-gameover-link"
+          >
+            <span>🎮</span>
+            <span>
+              Try something new on{" "}
+              <span style={{ fontWeight: 700 }}>ArcadeKit</span>
+            </span>
+            <span style={{ fontSize: "0.75rem", opacity: 0.6 }}>→</span>
+          </a>
+        </div>
+
         {game.opponentWantsRematch && !game.rematchRequested && (
           <p
             style={{

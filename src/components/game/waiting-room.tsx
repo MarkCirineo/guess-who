@@ -287,6 +287,47 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
           </button>
         )}
       </div>
+
+      {/* ArcadeKit cross-promo — only while waiting for player 2 */}
+      {game.players.length < 2 && (
+        <div
+          className="animate-fade-in"
+          style={{
+            marginTop: "1.5rem",
+            maxWidth: "480px",
+            width: "100%",
+            animationDelay: "1s",
+            animationFillMode: "both",
+          }}
+        >
+          <a
+            href="https://arcadekit.games"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="network-link"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              padding: "0.75rem 1rem",
+              borderRadius: "0.75rem",
+              background: "hsla(230, 20%, 15%, 0.35)",
+              border: "1px solid hsla(230, 15%, 30%, 0.25)",
+              fontSize: "0.8rem",
+              textDecoration: "none",
+            }}
+            id="arcadekit-waiting-link"
+          >
+            <span style={{ fontSize: "0.75rem", opacity: 0.5 }}>While you wait...</span>
+            <span>
+              Check out{" "}
+              <span style={{ fontWeight: 700 }}>ArcadeKit</span>
+            </span>
+            <span style={{ fontSize: "0.7rem", opacity: 0.5 }}>→</span>
+          </a>
+        </div>
+      )}
     </main>
   );
 }
