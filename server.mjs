@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import next from "next";
 import { Server } from "socket.io";
+import Redis from "ioredis";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "0.0.0.0";
@@ -8,6 +9,19 @@ const port = parseInt(process.env.PORT || "3000", 10);
 
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
+
+// ============================================
+// Redis Setup
+// ============================================
+
+const redis = new Redis({
+  host: process.env.REDIS_HOST || "localhost",
+  port: parseInt(process.env.REDIS_PORT || "6379", 10),
+  retryStrategy: (times) => Math.min(times * 200, 5000),
+});
+
+redis.on("connect", () => console.log("[redis] Connected"));
+redis.on("error", (err) => console.error("[redis] Error:", err.message));
 
 // ============================================
 // Character data (duplicated from src/lib/characters.ts for server usage)
@@ -30,6 +44,22 @@ const characters = [
 ];
 
 // ============================================
+// Player Identity Mapping
+// ============================================
+// playerId = stable UUID from client localStorage
+// socketId = transient socket.io connection ID
+
+/** @type {Map<string, string>} playerId → socketId */
+const playerToSocket = new Map();
+/** @type {Map<string, string>} socketId → playerId */
+const socketToPlayer = new Map();
+
+function emitToPlayer(io, playerId, event, data) {
+  const socketId = playerToSocket.get(playerId);
+  if (socketId) io.to(socketId).emit(event, data);
+}
+
+// ============================================
 // Room Management
 // ============================================
 
@@ -45,7 +75,7 @@ function generateRoomCode() {
   return code;
 }
 
-function createRoom(hostSocketId, hostName) {
+function createRoom(playerId, playerName) {
   let code;
   do {
     code = generateRoomCode();
@@ -60,16 +90,16 @@ function createRoom(hostSocketId, hostName) {
       showSuggestions: true,
     },
     currentTurn: null,
-    secretCharacters: new Map(), // socketId -> character object
-    crossedOut: new Map(), // socketId -> Set<characterId>
+    secretCharacters: new Map(), // playerId -> character object
+    crossedOut: new Map(), // playerId -> Set<characterId>
     questionHistory: [],
     pendingQuestion: null,
     rematchRequests: new Set(),
   };
 
-  room.players.set(hostSocketId, {
-    id: hostSocketId,
-    name: hostName,
+  room.players.set(playerId, {
+    id: playerId,
+    name: playerName,
     ready: false,
     connected: true,
   });
@@ -98,6 +128,7 @@ function getPublicGameState(room) {
     pendingQuestion: room.pendingQuestion,
     winner: room.winner || null,
     loser: room.loser || null,
+    gameResult: room.gameResult || null,
   };
 }
 
@@ -118,6 +149,7 @@ function startGame(room) {
   room.pendingQuestion = null;
   room.winner = null;
   room.loser = null;
+  room.gameResult = null;
   room.rematchRequests = new Set();
 
   // In 'with-questions' mode, randomly pick first turn
@@ -127,6 +159,85 @@ function startGame(room) {
     room.currentTurn = null;
   }
 }
+
+// ============================================
+// Redis Serialization
+// ============================================
+
+const ROOM_TTL = 7200; // 2 hours
+
+function serializeRoom(room) {
+  return {
+    code: room.code,
+    state: room.state,
+    settings: room.settings,
+    currentTurn: room.currentTurn,
+    questionHistory: room.questionHistory,
+    pendingQuestion: room.pendingQuestion,
+    winner: room.winner || null,
+    loser: room.loser || null,
+    gameResult: room.gameResult || null,
+    players: Object.fromEntries(room.players),
+    secretCharacters: Object.fromEntries(room.secretCharacters),
+    crossedOut: Object.fromEntries(
+      Array.from(room.crossedOut.entries()).map(([k, v]) => [k, [...v]])
+    ),
+    rematchRequests: [...room.rematchRequests],
+  };
+}
+
+function deserializeRoom(data) {
+  return {
+    ...data,
+    players: new Map(Object.entries(data.players)),
+    secretCharacters: new Map(Object.entries(data.secretCharacters)),
+    crossedOut: new Map(
+      Object.entries(data.crossedOut).map(([k, v]) => [k, new Set(v)])
+    ),
+    rematchRequests: new Set(data.rematchRequests),
+  };
+}
+
+async function saveRoom(room) {
+  try {
+    const data = JSON.stringify(serializeRoom(room));
+    await redis.set(`room:${room.code}`, data, "EX", ROOM_TTL);
+  } catch (err) {
+    console.error(`[redis] Failed to save room ${room.code}:`, err.message);
+  }
+}
+
+async function deleteRoomFromRedis(code) {
+  try {
+    await redis.del(`room:${code}`);
+  } catch (err) {
+    console.error(`[redis] Failed to delete room ${code}:`, err.message);
+  }
+}
+
+async function loadRoomsFromRedis() {
+  try {
+    const keys = await redis.keys("room:*");
+    console.log(`[redis] Found ${keys.length} room(s) to restore`);
+    for (const key of keys) {
+      const data = await redis.get(key);
+      if (!data) continue;
+      const room = deserializeRoom(JSON.parse(data));
+      // Mark all players as disconnected — they'll reconnect
+      for (const [, player] of room.players) {
+        player.connected = false;
+      }
+      rooms.set(room.code, room);
+      console.log(`[redis] Restored room ${room.code} (state: ${room.state})`);
+    }
+  } catch (err) {
+    console.error("[redis] Failed to load rooms:", err.message);
+  }
+}
+
+// ============================================
+// Stale Room Cleanup
+// ============================================
 
 // Clean up stale rooms periodically (rooms with no connected players for 30+ min)
 setInterval(() => {
@@ -138,6 +249,7 @@ setInterval(() => {
         room._disconnectTime = now;
       } else if (now - room._disconnectTime > 30 * 60 * 1000) {
         rooms.delete(code);
+        deleteRoomFromRedis(code);
         console.log(`[cleanup] Removed stale room ${code}`);
       }
     } else {
@@ -150,7 +262,9 @@ setInterval(() => {
 // Start Server
 // ============================================
 
-app.prepare().then(() => {
+app.prepare().then(async () => {
+  await loadRoomsFromRedis();
+
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer, {
@@ -165,24 +279,29 @@ app.prepare().then(() => {
     let currentRoom = null;
 
     // ---- CREATE ROOM ----
-    socket.on("create-room", ({ playerName }) => {
+    socket.on("create-room", ({ playerName, playerId }) => {
       if (currentRoom) {
         socket.emit("error", { message: "Already in a room" });
         return;
       }
 
-      const room = createRoom(socket.id, playerName || "Player 1");
+      // Register identity mapping
+      socketToPlayer.set(socket.id, playerId);
+      playerToSocket.set(playerId, socket.id);
+
+      const room = createRoom(playerId, playerName || "Player 1");
       currentRoom = room.code;
       socket.join(room.code);
 
       socket.emit("room-created", { roomCode: room.code });
       io.to(room.code).emit("player-joined", { players: getPublicPlayers(room) });
 
+      saveRoom(room);
       console.log(`[room] ${playerName} created room ${room.code}`);
     });
 
     // ---- JOIN ROOM ----
-    socket.on("join-room", ({ roomCode, playerName }) => {
+    socket.on("join-room", ({ roomCode, playerName, playerId }) => {
       const code = roomCode.toUpperCase().trim();
       const room = rooms.get(code);
 
@@ -191,8 +310,12 @@ app.prepare().then(() => {
         return;
       }
 
-      if (room.players.size >= 2 && !room.players.has(socket.id)) {
-        // Check if a disconnected player can be replaced (tab-close reconnection)
+      // Register identity mapping
+      socketToPlayer.set(socket.id, playerId);
+      playerToSocket.set(playerId, socket.id);
+
+      if (room.players.size >= 2 && !room.players.has(playerId)) {
+        // Check if a disconnected player can be replaced
         const disconnectedEntry = Array.from(room.players.entries())
           .find(([, p]) => !p.connected);
 
@@ -202,40 +325,43 @@ app.prepare().then(() => {
         }
 
         // Take over the disconnected player's slot
-        const [oldId, oldPlayer] = disconnectedEntry;
+        const [oldPid, oldPlayer] = disconnectedEntry;
 
-        // Transfer player data to new socket ID
+        // Transfer player data to new playerId
         const newPlayer = {
-          id: socket.id,
+          id: playerId,
           name: playerName || oldPlayer.name,
           ready: oldPlayer.ready,
           connected: true,
         };
 
         // Remove old entry, add new one
-        room.players.delete(oldId);
-        room.players.set(socket.id, newPlayer);
+        room.players.delete(oldPid);
+        room.players.set(playerId, newPlayer);
 
         // Transfer game state references
-        if (room.secretCharacters.has(oldId)) {
-          room.secretCharacters.set(socket.id, room.secretCharacters.get(oldId));
-          room.secretCharacters.delete(oldId);
+        if (room.secretCharacters.has(oldPid)) {
+          room.secretCharacters.set(playerId, room.secretCharacters.get(oldPid));
+          room.secretCharacters.delete(oldPid);
         }
-        if (room.crossedOut.has(oldId)) {
-          room.crossedOut.set(socket.id, room.crossedOut.get(oldId));
-          room.crossedOut.delete(oldId);
+        if (room.crossedOut.has(oldPid)) {
+          room.crossedOut.set(playerId, room.crossedOut.get(oldPid));
+          room.crossedOut.delete(oldPid);
         }
-        if (room.currentTurn === oldId) {
-          room.currentTurn = socket.id;
+        if (room.currentTurn === oldPid) {
+          room.currentTurn = playerId;
         }
-        if (room.winner === oldId) room.winner = socket.id;
-        if (room.loser === oldId) room.loser = socket.id;
-        if (room.rematchRequests.has(oldId)) {
-          room.rematchRequests.delete(oldId);
-          room.rematchRequests.add(socket.id);
+        if (room.winner === oldPid) room.winner = playerId;
+        if (room.loser === oldPid) room.loser = playerId;
+        if (room.rematchRequests.has(oldPid)) {
+          room.rematchRequests.delete(oldPid);
+          room.rematchRequests.add(playerId);
         }
 
-        console.log(`[room] ${playerName} reconnected to room ${code} (took over disconnected slot)`);
+        // Clean up old player's socket mapping
+        playerToSocket.delete(oldPid);
+
+        console.log(`[room] ${playerName} took over disconnected slot in room ${code}`);
       }
 
       if (currentRoom && currentRoom !== code) {
@@ -243,17 +369,22 @@ app.prepare().then(() => {
         return;
       }
 
-      if (!room.players.has(socket.id)) {
-        room.players.set(socket.id, {
-          id: socket.id,
+      if (!room.players.has(playerId)) {
+        room.players.set(playerId, {
+          id: playerId,
           name: playerName || "Player 2",
           ready: false,
           connected: true,
         });
       } else {
-        // Reconnecting
-        const player = room.players.get(socket.id);
+        // Reconnecting — same playerId rejoining
+        const player = room.players.get(playerId);
         player.connected = true;
+        // Cancel any pending disconnect grace timer
+        if (room._disconnectTimers && room._disconnectTimers[playerId]) {
+          clearTimeout(room._disconnectTimers[playerId]);
+          delete room._disconnectTimers[playerId];
+        }
       }
 
       currentRoom = code;
@@ -262,22 +393,77 @@ app.prepare().then(() => {
       // Send current state to the joining player
       socket.emit("room-state", {
         gameState: getPublicGameState(room),
-        secretCharacter: room.secretCharacters.get(socket.id) || null,
-        crossedOut: room.crossedOut.has(socket.id)
-          ? Array.from(room.crossedOut.get(socket.id))
+        secretCharacter: room.secretCharacters.get(playerId) || null,
+        crossedOut: room.crossedOut.has(playerId)
+          ? Array.from(room.crossedOut.get(playerId))
           : [],
       });
 
       io.to(code).emit("player-joined", { players: getPublicPlayers(room) });
+      saveRoom(room);
       console.log(`[room] ${playerName} joined room ${code}`);
+    });
+
+    // ---- REJOIN ROOM (after server restart) ----
+    socket.on("rejoin-room", ({ playerId, roomCode }) => {
+      const code = roomCode.toUpperCase().trim();
+      const room = rooms.get(code);
+
+      if (!room || !room.players.has(playerId)) {
+        socket.emit("error", { message: "Room not found or session expired" });
+        return;
+      }
+
+      // Clean up any stale socket mapping for this player
+      // (e.g. if the old socket hasn't disconnected yet)
+      const oldSocketId = playerToSocket.get(playerId);
+      if (oldSocketId && oldSocketId !== socket.id) {
+        socketToPlayer.delete(oldSocketId);
+      }
+
+      // Bind identity
+      socketToPlayer.set(socket.id, playerId);
+      playerToSocket.set(playerId, socket.id);
+
+      // Mark connected
+      const player = room.players.get(playerId);
+      player.connected = true;
+      // Cancel any pending disconnect grace timer
+      if (room._disconnectTimers && room._disconnectTimers[playerId]) {
+        clearTimeout(room._disconnectTimers[playerId]);
+        delete room._disconnectTimers[playerId];
+      }
+
+      currentRoom = code;
+      socket.join(code);
+
+      // Send full state back to the rejoining player
+      socket.emit("room-state", {
+        gameState: getPublicGameState(room),
+        secretCharacter: room.secretCharacters.get(playerId) || null,
+        crossedOut: room.crossedOut.has(playerId)
+          ? Array.from(room.crossedOut.get(playerId))
+          : [],
+      });
+
+      // Notify the other player
+      io.to(code).emit("player-reconnected", {
+        playerId: playerId,
+        playerName: player.name,
+      });
+
+      saveRoom(room);
+      console.log(`[room] ${player.name} rejoined room ${code}`);
     });
 
     // ---- PLAYER READY ----
     socket.on("player-ready", ({ roomCode }) => {
       const room = rooms.get(roomCode);
-      if (!room || !room.players.has(socket.id)) return;
+      const playerId = socketToPlayer.get(socket.id);
+      if (!room || !playerId || !room.players.has(playerId)) return;
+      if (room.state !== 'waiting') return; // Only allow ready-up before game starts
 
-      const player = room.players.get(socket.id);
+      const player = room.players.get(playerId);
       player.ready = true;
 
       io.to(roomCode).emit("player-joined", { players: getPublicPlayers(room) });
@@ -289,9 +475,9 @@ app.prepare().then(() => {
           startGame(room);
 
           // Send each player their secret character
-          for (const [pid, player] of room.players) {
+          for (const [pid] of room.players) {
             const secret = room.secretCharacters.get(pid);
-            io.to(pid).emit("game-started", {
+            emitToPlayer(io, pid, "game-started", {
               secretCharacter: secret,
               currentTurn: room.currentTurn,
               players: getPublicPlayers(room),
@@ -301,6 +487,8 @@ app.prepare().then(() => {
           console.log(`[game] Game started in room ${roomCode}`);
         }
       }
+
+      saveRoom(room);
     });
 
     // ---- UPDATE SETTINGS ----
@@ -309,25 +497,28 @@ app.prepare().then(() => {
       if (!room || room.state !== 'waiting') return;
 
       // Only the host (first player) can update settings
+      const playerId = socketToPlayer.get(socket.id);
       const firstPlayer = Array.from(room.players.keys())[0];
-      if (socket.id !== firstPlayer) return;
+      if (playerId !== firstPlayer) return;
 
       room.settings = { ...room.settings, ...settings };
       io.to(roomCode).emit("settings-updated", { settings: room.settings });
+      saveRoom(room);
     });
 
     // ---- ASK QUESTION ----
     socket.on("ask-question", ({ roomCode, question }) => {
       const room = rooms.get(roomCode);
+      const playerId = socketToPlayer.get(socket.id);
       if (!room || room.state !== 'playing') return;
       if (room.settings.mode !== 'with-questions') return;
-      if (room.currentTurn !== socket.id) return;
+      if (room.currentTurn !== playerId) return;
       if (room.pendingQuestion) return;
 
-      const player = room.players.get(socket.id);
+      const player = room.players.get(playerId);
       const q = {
         id: `q_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-        from: socket.id,
+        from: playerId,
         fromName: player.name,
         text: question,
         answer: null,
@@ -336,14 +527,16 @@ app.prepare().then(() => {
 
       room.pendingQuestion = q;
       io.to(roomCode).emit("question-asked", { question: q });
+      saveRoom(room);
     });
 
     // ---- ANSWER QUESTION ----
     socket.on("answer-question", ({ roomCode, questionId, answer }) => {
       const room = rooms.get(roomCode);
+      const playerId = socketToPlayer.get(socket.id);
       if (!room || room.state !== 'playing') return;
       if (!room.pendingQuestion || room.pendingQuestion.id !== questionId) return;
-      if (room.currentTurn === socket.id) return; // Can't answer your own question
+      if (room.currentTurn === playerId) return; // Can't answer your own question
 
       room.pendingQuestion.answer = answer;
       room.questionHistory.push({ ...room.pendingQuestion });
@@ -358,48 +551,52 @@ app.prepare().then(() => {
         question: room.questionHistory[room.questionHistory.length - 1],
         nextTurn,
       });
+      saveRoom(room);
     });
 
     // ---- TOGGLE CARD ----
     socket.on("toggle-card", ({ roomCode, characterId }) => {
       const room = rooms.get(roomCode);
+      const playerId = socketToPlayer.get(socket.id);
       if (!room || room.state !== 'playing') return;
-      if (!room.crossedOut.has(socket.id)) return;
+      if (!playerId || !room.crossedOut.has(playerId)) return;
 
-      const set = room.crossedOut.get(socket.id);
+      const set = room.crossedOut.get(playerId);
       if (set.has(characterId)) {
         set.delete(characterId);
       } else {
         set.add(characterId);
       }
       // No broadcast — crossed out state is private. Client manages its own UI.
+      saveRoom(room);
     });
 
     // ---- FINAL GUESS ----
     socket.on("final-guess", ({ roomCode, characterId }) => {
       const room = rooms.get(roomCode);
+      const playerId = socketToPlayer.get(socket.id);
       if (!room || room.state !== 'playing') return;
 
       // In with-questions mode, must be your turn
-      if (room.settings.mode === 'with-questions' && room.currentTurn !== socket.id) return;
+      if (room.settings.mode === 'with-questions' && room.currentTurn !== playerId) return;
 
       const playerIds = Array.from(room.players.keys());
-      const opponentId = playerIds.find(id => id !== socket.id);
+      const opponentId = playerIds.find(id => id !== playerId);
       const opponentSecret = room.secretCharacters.get(opponentId);
-      const mySecret = room.secretCharacters.get(socket.id);
+      const mySecret = room.secretCharacters.get(playerId);
       const guessedChar = characters.find(c => c.id === characterId);
 
       const correct = opponentSecret && opponentSecret.id === characterId;
 
       room.state = 'finished';
 
-      const guesserPlayer = room.players.get(socket.id);
+      const guesserPlayer = room.players.get(playerId);
       const opponentPlayer = room.players.get(opponentId);
 
       const result = {
-        winner: correct ? socket.id : opponentId,
+        winner: correct ? playerId : opponentId,
         winnerName: correct ? guesserPlayer.name : opponentPlayer.name,
-        loser: correct ? opponentId : socket.id,
+        loser: correct ? opponentId : playerId,
         loserName: correct ? opponentPlayer.name : guesserPlayer.name,
         winnerCharacter: correct ? mySecret : opponentSecret,
         loserCharacter: correct ? opponentSecret : mySecret,
@@ -409,26 +606,29 @@ app.prepare().then(() => {
 
       room.winner = result.winner;
       room.loser = result.loser;
+      room.gameResult = result;
 
       io.to(roomCode).emit("game-over", result);
+      saveRoom(room);
       console.log(`[game] Game over in room ${roomCode}: ${result.winnerName} wins`);
     });
 
     // ---- REMATCH ----
     socket.on("rematch", ({ roomCode }) => {
       const room = rooms.get(roomCode);
+      const playerId = socketToPlayer.get(socket.id);
       if (!room || room.state !== 'finished') return;
 
-      room.rematchRequests.add(socket.id);
+      room.rematchRequests.add(playerId);
 
       // Notify the other player
       const playerIds = Array.from(room.players.keys());
-      const otherId = playerIds.find(id => id !== socket.id);
-      const player = room.players.get(socket.id);
+      const otherId = playerIds.find(id => id !== playerId);
+      const player = room.players.get(playerId);
 
       if (otherId) {
-        io.to(otherId).emit("rematch-requested", {
-          from: socket.id,
+        emitToPlayer(io, otherId, "rematch-requested", {
+          from: playerId,
           fromName: player.name,
         });
       }
@@ -444,7 +644,7 @@ app.prepare().then(() => {
 
         for (const [pid] of room.players) {
           const secret = room.secretCharacters.get(pid);
-          io.to(pid).emit("game-restarted", {
+          emitToPlayer(io, pid, "game-restarted", {
             secretCharacter: secret,
             currentTurn: room.currentTurn,
             players: getPublicPlayers(room),
@@ -454,32 +654,68 @@ app.prepare().then(() => {
 
         console.log(`[game] Rematch started in room ${roomCode}`);
       }
+
+      saveRoom(room);
     });
 
     // ---- DISCONNECT ----
     socket.on("disconnect", () => {
       console.log(`[socket] Disconnected: ${socket.id}`);
+      const playerId = socketToPlayer.get(socket.id);
 
-      if (currentRoom) {
+      // Clean up socket-level mappings, but ONLY if this socket is still
+      // the active one for this player. If the player already reconnected
+      // on a newer socket (race: rejoin processed before old disconnect),
+      // don't wipe the new mapping.
+      if (playerId) {
+        socketToPlayer.delete(socket.id);
+        if (playerToSocket.get(playerId) === socket.id) {
+          playerToSocket.delete(playerId);
+        }
+      }
+
+      if (currentRoom && playerId) {
         const room = rooms.get(currentRoom);
-        if (room && room.players.has(socket.id)) {
-          const player = room.players.get(socket.id);
-          player.connected = false;
+        if (room && room.players.has(playerId)) {
+          // Only mark disconnected if the player hasn't already reconnected
+          // on a different socket
+          const currentSocketForPlayer = playerToSocket.get(playerId);
+          if (!currentSocketForPlayer) {
+            const player = room.players.get(playerId);
+            player.connected = false;
 
-          io.to(currentRoom).emit("player-disconnected", {
-            playerId: socket.id,
-            playerName: player.name,
-          });
+            io.to(currentRoom).emit("player-disconnected", {
+              playerId: playerId,
+              playerName: player.name,
+            });
 
-          // If game hasn't started and player disconnects, remove them
-          if (room.state === 'waiting') {
-            room.players.delete(socket.id);
-            io.to(currentRoom).emit("player-joined", { players: getPublicPlayers(room) });
+            // In waiting rooms, give the player a grace period to reconnect
+            // (handles transient disconnects like HMR page refresh, server restart).
+            // If they don't come back, THEN remove them.
+            if (room.state === 'waiting') {
+              const roomCode = currentRoom;
+              if (!room._disconnectTimers) room._disconnectTimers = {};
+              room._disconnectTimers[playerId] = setTimeout(() => {
+                // Re-check: player may have reconnected during the grace period
+                if (room.players.has(playerId) && !room.players.get(playerId).connected) {
+                  room.players.delete(playerId);
+                  io.to(roomCode).emit("player-joined", { players: getPublicPlayers(room) });
+                  console.log(`[room] Removed ${player.name} from waiting room ${roomCode} after grace period`);
 
-            if (room.players.size === 0) {
-              rooms.delete(currentRoom);
-              console.log(`[room] Removed empty room ${currentRoom}`);
+                  if (room.players.size === 0) {
+                    rooms.delete(roomCode);
+                    deleteRoomFromRedis(roomCode);
+                    console.log(`[room] Removed empty room ${roomCode}`);
+                    return;
+                  }
+                  saveRoom(room);
+                }
+              }, 20_000); // 20 second grace period
             }
+
+            saveRoom(room);
+          } else {
+            console.log(`[socket] Stale disconnect for ${playerId}, already on socket ${currentSocketForPlayer}`);
           }
         }
       }

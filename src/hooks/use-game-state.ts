@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { getSocket } from "@/lib/socket";
+import { getSocket, getPlayerId } from "@/lib/socket";
 import { characters as allCharacters } from "@/lib/characters";
 import type {
   Character,
@@ -23,6 +23,7 @@ export interface GameData {
   roomCode: string | null;
   myId: string | null;
   error: string | null;
+  isReconnecting: boolean;
 
   // Players
   players: Player[];
@@ -67,6 +68,7 @@ export function useGameState(): GameData {
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [myId, setMyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isReconnecting, setIsReconnecting] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [mySecret, setMySecret] = useState<Character | null>(null);
   const [crossedOut, setCrossedOut] = useState<Set<string>>(new Set());
@@ -90,20 +92,44 @@ export function useGameState(): GameData {
   const [opponentWantsRematch, setOpponentWantsRematch] = useState(false);
 
   const socketRef = useRef(getSocket());
+  const hasConnectedOnce = useRef(false);
+  const roomCodeRef = useRef<string | null>(null);
+
+  // Keep roomCodeRef in sync with roomCode state
+  useEffect(() => {
+    roomCodeRef.current = roomCode;
+  }, [roomCode]);
 
   useEffect(() => {
     const socket = socketRef.current;
 
     // If the socket is already connected (e.g. from a previous page navigation),
     // the 'connect' event won't fire again. Grab the ID immediately.
-    if (socket.connected && socket.id) {
-      setMyId(socket.id);
+    if (socket.connected) {
+      setMyId(getPlayerId());
+      hasConnectedOnce.current = true;
     }
 
     socket.on("connect", () => {
-      setMyId(socket.id ?? null);
-      if (screenState === "connecting" && !roomCode) {
-        // Stay in connecting, waiting for user action
+      setMyId(getPlayerId());
+
+      if (hasConnectedOnce.current) {
+        // This is a REconnection — attempt to rejoin our room
+        const savedRoom = localStorage.getItem('gw-room-code');
+        if (savedRoom) {
+          socket.emit("rejoin-room", {
+            playerId: getPlayerId(),
+            roomCode: savedRoom,
+          });
+        }
+      }
+      hasConnectedOnce.current = true;
+    });
+
+    socket.on("disconnect", () => {
+      // If we were in a room, show reconnecting overlay
+      if (roomCodeRef.current) {
+        setIsReconnecting(true);
       }
     });
 
@@ -111,6 +137,8 @@ export function useGameState(): GameData {
       setRoomCode(code);
       setScreenState("waiting");
       setError(null);
+      setIsReconnecting(false);
+      localStorage.setItem('gw-room-code', code);
     });
 
     socket.on("player-joined", ({ players: p }) => {
@@ -124,6 +152,8 @@ export function useGameState(): GameData {
       setCurrentTurn(gameState.currentTurn);
       setQuestionHistory(gameState.questionHistory);
       setPendingQuestion(gameState.pendingQuestion);
+      setIsReconnecting(false);
+      localStorage.setItem('gw-room-code', gameState.roomCode);
 
       if (secretCharacter) {
         // Find the full character from our local data
@@ -138,6 +168,28 @@ export function useGameState(): GameData {
       if (gameState.state === "playing") {
         setScreenState("playing");
       } else if (gameState.state === "finished") {
+        // Restore game-over result fields so the finished screen displays correctly
+        // (these are normally only set by the game-over event, but on rejoin we
+        // need to reconstruct them from the gameResult stored on the room)
+        if (gameState.gameResult) {
+          const r = gameState.gameResult;
+          setWinner(r.winner);
+          setWinnerName(r.winnerName);
+          setLoserName(r.loserName);
+          const winChar = r.winnerCharacter
+            ? allCharacters.find(c => c.id === r.winnerCharacter.id) || r.winnerCharacter
+            : null;
+          const loseChar = r.loserCharacter
+            ? allCharacters.find(c => c.id === r.loserCharacter.id) || r.loserCharacter
+            : null;
+          const guessChar = r.guessedCharacter
+            ? allCharacters.find(c => c.id === r.guessedCharacter.id) || r.guessedCharacter
+            : null;
+          setWinnerCharacter(winChar);
+          setLoserCharacter(loseChar);
+          setGuessedCharacter(guessChar);
+          setWasCorrect(r.correct);
+        }
         setScreenState("finished");
       } else {
         setScreenState("waiting");
@@ -238,6 +290,10 @@ export function useGameState(): GameData {
     });
 
     socket.on("error", ({ message }) => {
+      if (message === "Room not found or session expired") {
+        localStorage.removeItem('gw-room-code');
+        setIsReconnecting(false);
+      }
       setError(message);
       setTimeout(() => setError(null), 5000);
     });
@@ -247,6 +303,7 @@ export function useGameState(): GameData {
       // destroys socket.io's internal handlers and breaks the connection
       // (especially during React Strict Mode's mount→cleanup→remount cycle).
       socket.off("connect");
+      socket.off("disconnect");
       socket.off("room-created");
       socket.off("player-joined");
       socket.off("room-state");
@@ -271,11 +328,11 @@ export function useGameState(): GameData {
 
   // Actions
   const createRoom = useCallback((name: string) => {
-    socketRef.current.emit("create-room", { playerName: name });
+    socketRef.current.emit("create-room", { playerName: name, playerId: getPlayerId() });
   }, []);
 
   const joinRoom = useCallback((code: string, name: string) => {
-    socketRef.current.emit("join-room", { roomCode: code, playerName: name });
+    socketRef.current.emit("join-room", { roomCode: code, playerName: name, playerId: getPlayerId() });
   }, []);
 
   const setReady = useCallback(() => {
@@ -336,6 +393,7 @@ export function useGameState(): GameData {
     roomCode,
     myId,
     error,
+    isReconnecting,
     players,
     myPlayer,
     opponent,

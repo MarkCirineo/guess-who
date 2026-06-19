@@ -12,12 +12,21 @@ export function getSocket(): GameSocket {
     socket = io({
       autoConnect: true,
       reconnection: true,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
     });
   }
   return socket;
+}
+
+export function getPlayerId(): string {
+  let id = localStorage.getItem('gw-player-id');
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem('gw-player-id', id);
+  }
+  return id;
 }
 
 export function disconnectSocket() {
@@ -26,3 +35,4 @@ export function disconnectSocket() {
     socket = null;
   }
 }
+

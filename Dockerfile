@@ -28,7 +28,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/server.mjs ./server.mjs
 
 # socket.io is imported by server.mjs but not traced by Next.js standalone
-RUN npm install socket.io@4
+RUN npm install socket.io@4 ioredis@5
 
 USER nextjs
 

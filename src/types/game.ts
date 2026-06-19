@@ -56,6 +56,17 @@ export interface GameSettings {
   showSuggestions: boolean;
 }
 
+export interface GameResult {
+  winner: string;
+  winnerName: string;
+  loser: string;
+  loserName: string;
+  winnerCharacter: Character;
+  loserCharacter: Character;
+  guessedCharacter: Character;
+  correct: boolean;
+}
+
 export interface GameState {
   roomCode: string;
   players: Player[];
@@ -66,6 +77,7 @@ export interface GameState {
   pendingQuestion: Question | null;
   winner: string | null;
   loser: string | null;
+  gameResult: GameResult | null;
 }
 
 // ============================================
@@ -121,8 +133,9 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  'create-room': (data: { playerName: string }) => void;
-  'join-room': (data: { roomCode: string; playerName: string }) => void;
+  'create-room': (data: { playerName: string; playerId: string }) => void;
+  'join-room': (data: { roomCode: string; playerName: string; playerId: string }) => void;
+  'rejoin-room': (data: { playerId: string; roomCode: string }) => void;
   'player-ready': (data: { roomCode: string }) => void;
   'update-settings': (data: { roomCode: string; settings: GameSettings }) => void;
   'ask-question': (data: { roomCode: string; question: string }) => void;

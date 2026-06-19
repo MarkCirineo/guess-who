@@ -56,7 +56,7 @@ export default function GameOverScreen({ game }: { game: GameData }) {
       <div className="glass animate-slide-in" style={{ padding: "2.5rem", maxWidth: "480px", width: "100%" }}>
         {/* Result Icon */}
         <div style={{ fontSize: "4rem", marginBottom: "1rem" }}>
-          {game.iWon ? "🎉" : "😔"}
+          {game.iWon === null ? "🎮" : game.iWon ? "🎉" : "😔"}
         </div>
 
         {/* Title */}
@@ -73,7 +73,7 @@ export default function GameOverScreen({ game }: { game: GameData }) {
             backgroundClip: "text",
           }}
         >
-          {game.iWon ? "You Win!" : "You Lose!"}
+          {game.iWon === null ? "Game Over" : game.iWon ? "You Win!" : "You Lose!"}
         </h1>
 
         <p
@@ -84,8 +84,8 @@ export default function GameOverScreen({ game }: { game: GameData }) {
           }}
         >
           {game.wasCorrect
-            ? `${game.winnerName} correctly guessed the character!`
-            : `${game.loserName} guessed wrong and lost!`}
+            ? `${game.winnerName || "Someone"} correctly guessed the character!`
+            : `${game.loserName || "Someone"} guessed wrong and lost!`}
         </p>
 
         {/* Character Reveal */}

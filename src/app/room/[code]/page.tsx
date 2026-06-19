@@ -6,6 +6,7 @@ import { useGameState } from "@/hooks/use-game-state";
 import WaitingRoom from "@/components/game/waiting-room";
 import GameBoard from "@/components/game/game-board";
 import GameOverScreen from "@/components/game/game-over-screen";
+import ReconnectingOverlay from "@/components/game/reconnecting-overlay";
 
 export default function RoomPage() {
   const params = useParams();
@@ -295,11 +296,21 @@ export default function RoomPage() {
   }
 
   if (game.screenState === "finished") {
-    return <GameOverScreen game={game} />;
+    return (
+      <>
+        {game.isReconnecting && <ReconnectingOverlay />}
+        <GameOverScreen game={game} />
+      </>
+    );
   }
 
   if (game.screenState === "playing") {
-    return <GameBoard game={game} />;
+    return (
+      <>
+        {game.isReconnecting && <ReconnectingOverlay />}
+        <GameBoard game={game} />
+      </>
+    );
   }
 
   // Show loading state while creating a new room (before server assigns a code)
@@ -350,5 +361,10 @@ export default function RoomPage() {
     );
   }
 
-  return <WaitingRoom game={game} roomCode={displayCode} />;
+  return (
+    <>
+      {game.isReconnecting && <ReconnectingOverlay />}
+      <WaitingRoom game={game} roomCode={displayCode} />
+    </>
+  );
 }
