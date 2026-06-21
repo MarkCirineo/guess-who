@@ -276,7 +276,7 @@ export default function Home() {
           <a
             href="https://arcadekit.games"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="network-link"
             style={{ fontSize: "0.7rem" }}
             id="arcadekit-footer-link"
@@ -287,7 +287,7 @@ export default function Home() {
           <a
             href="https://arcadekit.games"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="network-link"
             style={{ fontSize: "0.7rem" }}
             id="arcadekit-footer-more"

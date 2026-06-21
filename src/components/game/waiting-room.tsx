@@ -303,7 +303,7 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
           <a
             href="https://arcadekit.games"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="network-link"
             style={{
               display: "flex",
