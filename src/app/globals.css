@@ -573,3 +573,206 @@ body {
   height: 1px;
   background: hsl(var(--color-border));
 }
+
+/* ============================================
+   Site footer
+   ============================================ */
+
+.site-footer {
+  width: 100%;
+  max-width: 900px;
+  margin: 3rem auto 0;
+  padding: 2rem 2rem 1.5rem;
+  border-top: 1px solid hsl(var(--color-border));
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-column h3 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(var(--color-text-muted));
+  margin-bottom: 0.75rem;
+}
+
+.footer-column ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-column a {
+  color: hsl(var(--color-text-dim));
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+  color: hsl(var(--color-primary-light));
+}
+
+.footer-bottom {
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--color-border));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.footer-bottom span,
+.footer-bottom a {
+  font-size: 0.75rem;
+  color: hsl(var(--color-text-dim));
+}
+
+.footer-bottom a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom a:hover {
+  color: hsl(var(--color-primary-light));
+}
+
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* ============================================
+   Content page typography
+   ============================================ */
+
+.content-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.content-card {
+  max-width: 720px;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.content-card h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.content-card h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.content-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--color-text));
+}
+
+.content-card p,
+.content-card li {
+  color: hsl(230, 10%, 65%);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.content-card p + p {
+  margin-top: 0.75rem;
+}
+
+.content-card ul,
+.content-card ol {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.content-card a {
+  color: hsl(220, 83%, 68%);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.content-card a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.content-section {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid hsl(230, 15%, 20%);
+}
+
+.content-section:last-of-type {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Character trait table */
+.trait-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+}
+
+.trait-table th {
+  text-align: left;
+  padding: 0.5rem 0.4rem;
+  border-bottom: 2px solid hsl(var(--color-border-light));
+  color: hsl(var(--color-text));
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.trait-table td {
+  padding: 0.4rem;
+  border-bottom: 1px solid hsl(var(--color-border));
+  color: hsl(230, 10%, 65%);
+}
+
+.trait-table tr:hover td {
+  background: hsla(220, 83%, 58%, 0.05);
+}
+
+@media (max-width: 600px) {
+  .trait-table {
+    font-size: 0.7rem;
+  }
+  .trait-table th,
+  .trait-table td {
+    padding: 0.3rem 0.25rem;
+  }
+}

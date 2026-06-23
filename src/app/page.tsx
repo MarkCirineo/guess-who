@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const router = useRouter();
@@ -244,58 +246,160 @@ export default function Home() {
         )}
       </div>
 
-      {/* Footer */}
+      {/* Content Sections — crawlable text for SEO */}
       <div
+        className="animate-slide-in"
         style={{
-          marginTop: "2rem",
-          textAlign: "center",
+          maxWidth: "680px",
+          width: "100%",
+          marginTop: "3rem",
+          animationDelay: "0.2s",
         }}
       >
-        <p
-          style={{
-            color: "hsl(230, 10%, 35%)",
-            fontSize: "0.8rem",
-          }}
-        >
-          No account needed · Just create &amp; play ·{" "}
-          <a
-            href="/privacy"
-            style={{ color: "hsl(230, 10%, 45%)", textDecoration: "underline" }}
+        {/* What is Guess Who Online */}
+        <section style={{ marginBottom: "2.5rem", textAlign: "center" }}>
+          <h2
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              marginBottom: "0.75rem",
+            }}
           >
-            Privacy Policy
-          </a>
-        </p>
-        <p
-          style={{
-            color: "hsl(230, 10%, 30%)",
-            fontSize: "0.7rem",
-            marginTop: "0.4rem",
-          }}
-        >
-          A game from{" "}
-          <a
-            href="https://arcadekit.games"
-            target="_blank"
-            rel="noopener"
-            className="network-link"
-            style={{ fontSize: "0.7rem" }}
-            id="arcadekit-footer-link"
+            What is Guess Who Online?
+          </h2>
+          <p
+            style={{
+              color: "hsl(230, 10%, 60%)",
+              fontSize: "0.9rem",
+              lineHeight: 1.7,
+              maxWidth: "560px",
+              margin: "0 auto",
+            }}
           >
-            ArcadeKit
-          </a>
-          {" · "}
-          <a
-            href="https://arcadekit.games"
-            target="_blank"
-            rel="noopener"
-            className="network-link"
-            style={{ fontSize: "0.7rem" }}
-            id="arcadekit-footer-more"
+            Guess Who Online is a free, browser-based version of the classic
+            two-player board game. Each player is secretly assigned one of 24
+            unique characters. Take turns asking yes-or-no questions to
+            narrow down the possibilities and be the first to guess your
+            opponent&apos;s character. Play with friends in real-time using
+            a simple room code — no downloads, no sign-ups, no hassle.
+          </p>
+        </section>
+
+        {/* How It Works */}
+        <section style={{ marginBottom: "2.5rem" }}>
+          <h2
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 700,
+              marginBottom: "1rem",
+              textAlign: "center",
+            }}
           >
-            More Games →
-          </a>
-        </p>
+            How It Works
+          </h2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: "1rem",
+            }}
+          >
+            <StepCard emoji="🎲" title="Create a Room" desc="Click Create Game and get a unique room code to share with your friend." />
+            <StepCard emoji="🔗" title="Share the Code" desc="Your friend enters the code to join instantly — no accounts needed." />
+            <StepCard emoji="🎭" title="Start Guessing" desc="Ask questions, eliminate characters, and race to guess first!" />
+          </div>
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "1rem",
+              fontSize: "0.85rem",
+            }}
+          >
+            <Link
+              href="/how-to-play"
+              style={{ color: "hsl(220, 83%, 68%)", textDecoration: "none" }}
+            >
+              Read the full rules &amp; strategy guide →
+            </Link>
+          </p>
+        </section>
+
+        {/* Features */}
+        <section style={{ marginBottom: "1rem" }}>
+          <h2
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 700,
+              marginBottom: "1rem",
+              textAlign: "center",
+            }}
+          >
+            Features
+          </h2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "0.75rem",
+            }}
+          >
+            <FeatureItem emoji="⚡" text="Real-time multiplayer — play with anyone, anywhere in the world" />
+            <FeatureItem emoji="🙅" text="No sign-up required — just pick a name and start playing" />
+            <FeatureItem emoji="🎮" text="Two game modes — online multiplayer or local pass & play on one device" />
+            <FeatureItem emoji="👥" text="24 unique characters — each with their own look and traits" />
+            <FeatureItem emoji="💬" text="Built-in Q&A system — or use Board Only mode with voice chat" />
+            <FeatureItem emoji="🔄" text="Instant rematch — jump right back in after every game" />
+          </div>
+        </section>
       </div>
+
+      <Footer />
     </main>
+  );
+}
+
+function StepCard({
+  emoji,
+  title,
+  desc,
+}: {
+  emoji: string;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div
+      className="glass"
+      style={{
+        padding: "1.25rem",
+        textAlign: "center",
+      }}
+    >
+      <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{emoji}</div>
+      <h3 style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: "0.35rem" }}>
+        {title}
+      </h3>
+      <p style={{ color: "hsl(230, 10%, 55%)", fontSize: "0.8rem", lineHeight: 1.6 }}>
+        {desc}
+      </p>
+    </div>
+  );
+}
+
+function FeatureItem({ emoji, text }: { emoji: string; text: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "0.6rem",
+        padding: "0.5rem 0",
+      }}
+    >
+      <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>{emoji}</span>
+      <span style={{ color: "hsl(230, 10%, 60%)", fontSize: "0.85rem", lineHeight: 1.6 }}>
+        {text}
+      </span>
+    </div>
   );
 }

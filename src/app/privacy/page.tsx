@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Guess Who Online",
@@ -9,23 +10,10 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicy() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "2rem",
-      }}
-    >
+    <main className="content-page">
       <div
-        className="glass animate-slide-in"
-        style={{
-          padding: "2.5rem",
-          maxWidth: "680px",
-          width: "100%",
-          marginTop: "2rem",
-        }}
+        className="content-card glass animate-slide-in"
+        style={{ padding: "2.5rem" }}
       >
         <Link
           href="/"
@@ -42,15 +30,7 @@ export default function PrivacyPolicy() {
           ← Back to Home
         </Link>
 
-        <h1
-          style={{
-            fontSize: "1.75rem",
-            fontWeight: 800,
-            marginBottom: "0.5rem",
-          }}
-        >
-          Privacy Policy
-        </h1>
+        <h1>Privacy Policy</h1>
         <p
           style={{
             color: "hsl(230, 10%, 50%)",
@@ -58,7 +38,7 @@ export default function PrivacyPolicy() {
             marginBottom: "2rem",
           }}
         >
-          Last updated: June 11, 2025
+          Last updated: June 21, 2026
         </p>
 
         <Section title="Overview">
@@ -151,26 +131,36 @@ export default function PrivacyPolicy() {
           </p>
         </Section>
 
-        <Section title="Changes to This Policy" last>
+        <Section title="Changes to This Policy">
           <p>
             We may update this policy from time to time. Changes will be
             reflected on this page with an updated date.
           </p>
         </Section>
+
+        <Section title="Contact Us" last>
+          <p>
+            If you have any questions or concerns about this privacy policy,
+            please reach out to us at{" "}
+            <a
+              href="mailto:contact@playguesswho.net"
+              style={{ color: "hsl(220, 83%, 68%)" }}
+            >
+              contact@playguesswho.net
+            </a>
+            . You can also visit our{" "}
+            <Link
+              href="/contact"
+              style={{ color: "hsl(220, 83%, 68%)" }}
+            >
+              contact page
+            </Link>{" "}
+            for more ways to get in touch.
+          </p>
+        </Section>
       </div>
 
-      <p
-        style={{
-          marginTop: "2rem",
-          marginBottom: "2rem",
-          color: "hsl(230, 10%, 35%)",
-          fontSize: "0.8rem",
-        }}
-      >
-        <Link href="/" style={{ color: "hsl(230, 10%, 45%)", textDecoration: "none" }}>
-          Guess Who Online
-        </Link>
-      </p>
+      <Footer />
     </main>
   );
 }

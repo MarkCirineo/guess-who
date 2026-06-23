@@ -2,10 +2,25 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://playguesswho.net"),
   title: "Guess Who Online — Play with Friends",
   description:
     "Play the classic Guess Who board game online with friends. Create a room, share the code, and start guessing!",
   keywords: ["guess who", "board game", "multiplayer", "online game"],
+  openGraph: {
+    title: "Guess Who Online — Play with Friends",
+    description:
+      "Play the classic Guess Who board game online with friends. No downloads, no accounts — just create a room and play.",
+    siteName: "Guess Who Online",
+    type: "website",
+    url: "https://playguesswho.net",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Guess Who Online — Play with Friends",
+    description:
+      "The classic board game, now playable online with friends anywhere. Free, no sign-up required.",
+  },
 };
 
 export default function RootLayout({
