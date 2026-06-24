@@ -218,11 +218,48 @@ export default function GameOverScreen({ game }: { game: GameData }) {
           </button>
         </div>
 
+        {/* Buy Me a Coffee */}
+        <a
+          href="https://buymeacoffee.com/arcadekit"
+          target="_blank"
+          rel="noopener"
+          className="animate-fade-in"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
+            marginTop: "1rem",
+            padding: "0.6rem",
+            borderRadius: "0.75rem",
+            background: "hsla(35, 80%, 50%, 0.08)",
+            border: "1px solid hsla(35, 80%, 50%, 0.15)",
+            fontSize: "0.8rem",
+            color: "hsl(35, 80%, 65%)",
+            textDecoration: "none",
+            transition: "all 0.2s ease",
+            animationDelay: "0.3s",
+            animationFillMode: "both",
+          }}
+          id="bmc-gameover-link"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "hsla(35, 80%, 50%, 0.15)";
+            e.currentTarget.style.borderColor = "hsla(35, 80%, 50%, 0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "hsla(35, 80%, 50%, 0.08)";
+            e.currentTarget.style.borderColor = "hsla(35, 80%, 50%, 0.15)";
+          }}
+        >
+          <span>☕</span>
+          <span>Enjoying the game? <span style={{ fontWeight: 600 }}>Buy me a coffee</span></span>
+        </a>
+
         {/* ArcadeKit cross-promo */}
         <div
           className="animate-fade-in"
           style={{
-            marginTop: "1rem",
+            marginTop: "0.5rem",
             animationDelay: "0.4s",
             animationFillMode: "both",
           }}

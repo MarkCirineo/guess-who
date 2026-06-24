@@ -24,6 +24,16 @@ export default function Footer() {
             <li>
               <Link href="/contact">Contact</Link>
             </li>
+            <li>
+              <a
+                href="https://buymeacoffee.com/arcadekit"
+                target="_blank"
+                rel="noopener"
+                id="bmc-footer-link"
+              >
+                ☕ Buy Me a Coffee
+              </a>
+            </li>
           </ul>
         </div>
         <div className="footer-column">
