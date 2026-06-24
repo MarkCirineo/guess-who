@@ -49,7 +49,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} Guess Who Online</span>
+        <span>© {new Date().getFullYear()} ArcadeKit</span>
         <span>
           A game from{" "}
           <a
