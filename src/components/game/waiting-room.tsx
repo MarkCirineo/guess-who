@@ -318,6 +318,8 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
               textDecoration: "none",
             }}
             id="arcadekit-waiting-link"
+            data-umami-event="arcadekit-click"
+            data-umami-event-location="waiting-room"
           >
             <span style={{ fontSize: "0.75rem", opacity: 0.5 }}>While you wait...</span>
             <span>

@@ -200,6 +200,7 @@ export default function GameOverScreen({ game }: { game: GameData }) {
             disabled={game.rematchRequested}
             style={{ width: "100%", padding: "1rem", fontSize: "1.05rem" }}
             id="rematch-btn"
+            data-umami-event="rematch"
           >
             {game.rematchRequested
               ? game.opponentWantsRematch
@@ -242,6 +243,8 @@ export default function GameOverScreen({ game }: { game: GameData }) {
             animationFillMode: "both",
           }}
           id="bmc-gameover-link"
+          data-umami-event="bmc-click"
+          data-umami-event-location="game-over"
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "hsla(35, 80%, 50%, 0.15)";
             e.currentTarget.style.borderColor = "hsla(35, 80%, 50%, 0.3)";
@@ -284,6 +287,8 @@ export default function GameOverScreen({ game }: { game: GameData }) {
               transition: "all 0.2s ease",
             }}
             id="arcadekit-gameover-link"
+            data-umami-event="arcadekit-click"
+            data-umami-event-location="game-over"
           >
             <span>🎮</span>
             <span>

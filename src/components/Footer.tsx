@@ -30,6 +30,8 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener"
                 id="bmc-footer-link"
+                data-umami-event="bmc-click"
+                data-umami-event-location="footer"
               >
                 ☕ Buy Me a Coffee
               </a>
