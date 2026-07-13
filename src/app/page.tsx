@@ -351,6 +351,57 @@ export default function Home() {
             <FeatureItem emoji="🔄" text="Instant rematch — jump right back in after every game" />
           </div>
         </section>
+
+        {/* From the Blog */}
+        <section style={{ marginTop: "1.5rem" }}>
+          <h2
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 700,
+              marginBottom: "1rem",
+              textAlign: "center",
+            }}
+          >
+            From the Blog
+          </h2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.6rem",
+            }}
+          >
+            <BlogLink
+              href="/blog/best-questions-to-ask-in-guess-who"
+              title="Best Questions to Ask in Guess Who"
+              desc="Ranked by effectiveness — with real probability analysis"
+            />
+            <BlogLink
+              href="/blog/how-to-win-at-guess-who"
+              title="How to Win at Guess Who"
+              desc="A complete strategy guide from opening move to final guess"
+            />
+            <BlogLink
+              href="/blog/best-free-online-board-games"
+              title="7 Best Free Online Board Games"
+              desc="Our top picks for playing with friends in your browser"
+            />
+          </div>
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "0.75rem",
+              fontSize: "0.8rem",
+            }}
+          >
+            <Link
+              href="/blog"
+              style={{ color: "hsl(220, 83%, 68%)", textDecoration: "none" }}
+            >
+              View all articles →
+            </Link>
+          </p>
+        </section>
       </div>
 
       <Footer />
@@ -403,3 +454,44 @@ function FeatureItem({ emoji, text }: { emoji: string; text: string }) {
     </div>
   );
 }
+
+function BlogLink({
+  href,
+  title,
+  desc,
+}: {
+  href: string;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "block",
+        padding: "0.75rem 1rem",
+        borderRadius: "0.5rem",
+        background: "hsla(220, 83%, 58%, 0.04)",
+        border: "1px solid hsla(220, 83%, 58%, 0.08)",
+        textDecoration: "none",
+        color: "inherit",
+        transition: "border-color 0.2s ease, background 0.2s ease",
+      }}
+    >
+      <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block" }}>
+        {title}
+      </span>
+      <span
+        style={{
+          fontSize: "0.75rem",
+          color: "hsl(230, 10%, 50%)",
+          display: "block",
+          marginTop: "0.15rem",
+        }}
+      >
+        {desc}
+      </span>
+    </Link>
+  );
+}
+

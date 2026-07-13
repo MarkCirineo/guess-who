@@ -13,6 +13,9 @@ export default function Footer() {
             <li>
               <Link href="/how-to-play">How to Play</Link>
             </li>
+            <li>
+              <Link href="/blog">Blog</Link>
+            </li>
           </ul>
         </div>
         <div className="footer-column">
