@@ -575,6 +575,209 @@ body {
 }
 
 /* ============================================
+   Site header
+   ============================================ */
+
+.site-header {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.site-header .header-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  font-size: 1rem;
+  color: hsl(var(--color-text));
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-header .header-logo:hover {
+  color: hsl(var(--color-primary-light));
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.header-nav a {
+  color: hsl(var(--color-text-muted));
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.header-nav a:hover {
+  color: hsl(var(--color-primary-light));
+}
+
+.header-nav a.nav-cta {
+  background: linear-gradient(135deg, hsl(var(--color-primary)), hsl(var(--color-primary-light)));
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.6rem;
+  font-weight: 600;
+}
+
+.header-nav a.nav-cta:hover {
+  color: white;
+  box-shadow: 0 4px 16px hsla(220, 83%, 58%, 0.35);
+}
+
+@media (max-width: 600px) {
+  .site-header {
+    padding: 0.75rem 1rem;
+    justify-content: center;
+  }
+  .header-nav {
+    gap: 0.9rem;
+  }
+}
+
+/* ============================================
+   Article figures & images
+   ============================================ */
+
+.article-figure {
+  margin: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.article-figure img,
+.article-figure svg {
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--color-border));
+  background: hsl(var(--color-bg-card));
+}
+
+.article-figure figcaption {
+  font-size: 0.75rem;
+  color: hsl(var(--color-text-dim));
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Small character portrait grid used in articles/pages */
+.portrait-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.portrait-grid .portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.35rem;
+  background: hsl(var(--color-bg-card));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 0.6rem;
+}
+
+.portrait-grid .portrait img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.4rem;
+}
+
+.portrait-grid .portrait span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: hsl(var(--color-text-muted));
+}
+
+/* ============================================
+   Author byline & bio
+   ============================================ */
+
+.author-byline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  color: hsl(var(--color-text-dim));
+  flex-wrap: wrap;
+}
+
+.author-byline .author-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(var(--color-primary)), hsl(var(--color-secondary)));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.author-byline .author-name {
+  color: hsl(var(--color-text));
+  font-weight: 600;
+}
+
+.author-bio {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background: hsla(220, 83%, 58%, 0.05);
+  border: 1px solid hsla(220, 83%, 58%, 0.12);
+  border-radius: 0.75rem;
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.author-bio .author-avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(var(--color-primary)), hsl(var(--color-secondary)));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.author-bio p {
+  font-size: 0.8rem !important;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.author-bio .bio-name {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: hsl(var(--color-text));
+  margin-bottom: 0.2rem;
+}
+
+/* ============================================
    Site footer
    ============================================ */
 
@@ -643,6 +846,14 @@ body {
 
 .footer-bottom a:hover {
   color: hsl(var(--color-primary-light));
+}
+
+.footer-disclaimer {
+  padding-top: 0.75rem;
+  font-size: 0.7rem;
+  color: hsl(var(--color-text-dim));
+  line-height: 1.6;
+  text-align: center;
 }
 
 @media (max-width: 600px) {

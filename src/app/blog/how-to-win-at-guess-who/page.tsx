@@ -1,384 +1,360 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AuthorByline from "@/components/AuthorByline";
+import AuthorBio from "@/components/AuthorBio";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata, articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "How to Win at Guess Who: A Complete Strategy Guide — Guess Who Online",
   description:
     "Master the art of winning Guess Who with our in-depth strategy guide. Learn the binary search approach, opening theory, and when to make your final guess.",
-};
+  path: "/blog/how-to-win-at-guess-who",
+  ogType: "article",
+});
 
-export default function HowToWinAtGuessWho() {
+export default function HowToWinArticle() {
   return (
-    <main className="content-page">
-      <div
-        className="content-card glass animate-slide-in"
-        style={{ padding: "2.5rem" }}
-      >
-        <Link
-          href="/blog"
-          style={{
-            color: "hsl(220, 83%, 68%)",
-            fontSize: "0.85rem",
-            textDecoration: "none",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.35rem",
-            marginBottom: "1.5rem",
-          }}
+    <>
+      <Header />
+      <main className="content-page">
+        <JsonLd
+          data={[
+            articleJsonLd({
+              title: "How to Win at Guess Who: A Complete Strategy Guide",
+              description:
+                "Master the art of winning Guess Who with our in-depth strategy guide. Learn the binary search approach, opening theory, and when to make your final guess.",
+              path: "/blog/how-to-win-at-guess-who",
+              published: "2026-07-13",
+              updated: "2026-07-30",
+            }),
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+              { name: "How to Win", path: "/blog/how-to-win-at-guess-who" },
+            ]),
+          ]}
+        />
+        <div
+          className="content-card glass animate-slide-in"
+          style={{ padding: "2.5rem" }}
         >
-          ← Back to Blog
-        </Link>
+          <Link
+            href="/blog"
+            style={{
+              color: "hsl(220, 83%, 68%)",
+              fontSize: "0.85rem",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.35rem",
+              marginBottom: "1.5rem",
+            }}
+          >
+            ← Back to Blog
+          </Link>
 
-        <h1>How to Win at Guess Who: A Complete Strategy Guide</h1>
-        <p
-          style={{
-            color: "hsl(230, 10%, 50%)",
-            fontSize: "0.8rem",
-            marginBottom: "2rem",
-          }}
-        >
-          Published July 4, 2026 · 5 min read
-        </p>
+          <h1>How to Win at Guess Who: A Complete Strategy Guide</h1>
+          <AuthorByline
+            published="2026-07-13"
+            updated="2026-07-30"
+            readTime="7 min read"
+          />
 
-        <section className="content-section">
-          <h2>It&apos;s Not Luck — It&apos;s Information Theory</h2>
-          <p>
-            Most people play Guess Who like a lottery. They pick whatever
-            question feels right, hope for a favorable answer, and stumble toward
-            a guess. But underneath the colorful faces and plastic flaps, Guess
-            Who is a game about{" "}
-            <strong>information entropy</strong> — the same concept that powers
-            search engines, compression algorithms, and decision trees in machine
-            learning.
-          </p>
-          <p>
-            Every question you ask reduces the uncertainty in the system. The
-            player who reduces uncertainty <em>faster</em> wins. It&apos;s that
-            simple. And once you understand the math behind it, you&apos;ll never
-            play the same way again.
-          </p>
-        </section>
+          <section className="content-section">
+            <h2>What the Numbers on This Board Tell Us</h2>
+            <p>
+              Underneath the faces, Guess Who is a search problem, and the
+              strategy that falls out of that is not the intuitive one. The
+              questions that feel exciting to ask are usually the questions
+              that cost you the game. Winning play is boring by design:
+              half-the-board questions, every turn, until there is nothing left
+              to halve. &quot;Is your character bald?&quot; feels thrilling on
+              the 8.3% of games where it hits, and quietly hands the game away
+              the other 91.7% of the time.
+            </p>
+            <p>
+              The mechanism is simple. Every yes/no question splits the 24
+              characters into two groups, and the answer throws one group away.
+              Whoever shrinks their candidate pool to one character first wins.
+              That&apos;s the whole game. What follows is how to do that
+              shrinking as fast as the math allows — with the actual numbers
+              from this board, counted trait by trait off the roster itself.
+            </p>
+          </section>
 
-        <section className="content-section">
-          <h2>The Binary Search Approach</h2>
-          <p>
-            In computer science, binary search is the fastest way to find a
-            target in a sorted list: you split the list in half with every step.
-            A list of 1,000,000 items? Only 20 checks. The same principle
-            applies to Guess Who.
-          </p>
-          <p>
-            With 24 characters on the board, a perfect binary strategy requires
-            roughly <strong>log₂(24) ≈ 4.58 questions</strong> — meaning you can
-            theoretically identify any character in 5 questions. Here&apos;s how
-            the math breaks down:
-          </p>
-          <ul>
-            <li>
-              <strong>After question 1:</strong> 24 → 12 characters (if you split
-              evenly)
-            </li>
-            <li>
-              <strong>After question 2:</strong> 12 → 6 characters
-            </li>
-            <li>
-              <strong>After question 3:</strong> 6 → 3 characters
-            </li>
-            <li>
-              <strong>After question 4:</strong> 3 → ~1.5 characters (this is
-              where perfect halving breaks down)
-            </li>
-            <li>
-              <strong>Question 5:</strong> Final guess with certainty or near-certainty
-            </li>
-          </ul>
-          <p>
-            The key insight: <strong>
-              every question should eliminate as close to 50% of the remaining
-              characters as possible
-            </strong>. A question that only eliminates 2 out of 24 characters
-            wastes a turn. A question that eliminates 12 is ideal.
-          </p>
-          <p>
-            You can quantify this with a simple ratio. For any yes/no question,
-            count how many characters match. The closer that count is to half the
-            remaining board, the better the question. A question that matches 12
-            out of 24 is perfect. A question that matches 2 out of 24 is
-            terrible — even if you get a &quot;yes,&quot; you&apos;ve only
-            narrowed it to 2, but a &quot;no&quot; leaves you with 22 — barely
-            better than where you started.
-          </p>
-        </section>
-
-        <section className="content-section">
-          <h2>Opening Move Theory</h2>
-          <p>
-            Your first question is the most important one in the entire game. At
-            24 characters, you have maximum uncertainty, so a good split yields
-            the biggest absolute payoff. Let&apos;s rank the openers using the
-            actual character board on this site:
-          </p>
-          <h3>Tier 1: The Perfect Split (12/12)</h3>
-          <p>
-            <strong>&quot;Does your character look masculine?&quot;</strong>{" "}
-            (or feminine) — This is the single best opening question. Our board
-            has exactly 12 masculine-presenting and 12 feminine-presenting
-            characters. Regardless of the answer, you eliminate exactly half
-            the board. You literally cannot do better on turn one.
-          </p>
-          <h3>Tier 2: Strong Openers (10–14 split)</h3>
-          <p>
-            <strong>&quot;Is your character smiling?&quot;</strong> — 14 characters
-            smile, 10 don&apos;t. That&apos;s a 58/42 split, which still
-            eliminates 10–14 characters. Not as clean as gender presentation, but
-            very strong.
-          </p>
-          <p>
-            <strong>&quot;Does your character have short hair?&quot;</strong> — 10
-            characters have short hair, 14 don&apos;t (medium, long, or bald).
-            A solid 42/58 split.
-          </p>
-          <h3>Tier 3: Decent Openers (8/16 split)</h3>
-          <p>
-            <strong>&quot;Does your character wear glasses?&quot;</strong> and{" "}
-            <strong>&quot;Is your character wearing a hat?&quot;</strong> both
-            produce an 8/16 split (33/67). A &quot;yes&quot; answer is great —
-            you drop to 8 characters instantly. But a &quot;no&quot; only cuts
-            to 16, which is mediocre. These are playable, but you&apos;re
-            gambling on a favorable outcome.
-          </p>
-          <h3>Avoid: Rare Trait Openers</h3>
-          <p>
-            <strong>&quot;Is your character bald?&quot;</strong> only matches 2
-            out of 24. A &quot;yes&quot; wins big (down to 2!), but it only has
-            an 8.3% chance of happening. The other 91.7% of the time, you go
-            from 24 to 22 — you&apos;ve wasted your most valuable question on
-            almost no information. Similarly, <strong>&quot;Does your character
-            have white hair?&quot;</strong> (2/24) and <strong>&quot;Does your
-            character wear a bowtie?&quot;</strong> (2/24) are traps.
-          </p>
-        </section>
-
-        <section className="content-section">
-          <h2>The Mid-Game: Narrowing Down</h2>
-          <p>
-            Once you&apos;ve used your best macro-level questions, the game
-            shifts. At 6–8 remaining characters, the board-wide traits are mostly
-            spent. Now you need to exploit <strong>trait intersections</strong>.
-          </p>
-          <p>
-            This is where hair color becomes powerful. On the full board, asking
-            &quot;Does your character have brown hair?&quot; gives you a 6/24
-            split — mediocre. But if you&apos;ve already narrowed to the 12
-            feminine-presenting characters, brown hair might match 3 out of 12:
-            a 25/75 split, which is decent for a board that small.
-          </p>
-          <p>
-            <strong>Eye color</strong> is the mid-game&apos;s hidden weapon. On
-            the full board, brown eyes match 11 characters, blue matches 7, and
-            green matches 6. Those numbers aren&apos;t great for an opener. But
-            when you&apos;re down to 6 characters and 3 of them have brown eyes?
-            That&apos;s a perfect 50/50 split.
-          </p>
-          <p>
-            The general principle: <strong>re-evaluate every trait&apos;s
-            split ratio against the current remaining pool</strong>, not the
-            original 24. A question that was weak at the start can become optimal
-            three turns later.
-          </p>
-          <p>
-            Accessories also shine in the mid-game. Earrings (5 characters),
-            necklaces (5), scarves (3), bowties (2), and headbands (2) are too
-            narrow for openers. But when you&apos;re staring at 4 remaining
-            characters and two of them wear earrings? Ask it.
-          </p>
-        </section>
-
-        <section className="content-section">
-          <h2>When to Make Your Final Guess</h2>
-          <p>
-            This is where most players either win or throw the game. The decision
-            to stop asking questions and commit to a final guess is a matter of{" "}
-            <strong>expected value</strong>.
-          </p>
-          <p>
-            Let&apos;s say it&apos;s your turn, and you have <em>n</em> characters
-            remaining. If you guess now, your probability of being right is 1/n.
-            If you ask another question instead (and split optimally), you&apos;ll
-            be at roughly n/2 characters, then guess next turn with probability
-            2/n. But that costs you a turn — a turn your opponent might use to
-            win.
-          </p>
-          <h3>The Math:</h3>
-          <ul>
-            <li>
-              <strong>1 character left:</strong> Guess. You&apos;re 100% certain.
-              Never waste a turn asking another question.
-            </li>
-            <li>
-              <strong>2 characters left:</strong> Guess. You have a 50% chance of
-              winning immediately. If you ask a question instead, you&apos;ll
-              narrow to 1 and guess next turn with 100% certainty — but
-              you&apos;ve spent an extra turn. In a race, the 50% gamble now is
-              almost always worth it over a guaranteed answer one turn later,
-              because your opponent might also be close.
-            </li>
-            <li>
-              <strong>3 characters left:</strong> Ask a question. A 33% guess is
-              too risky. One more question drops you to 1–2 characters, giving
-              you 50–100% odds on your next turn. The exception: if your opponent
-              is clearly about to guess, a 33% Hail Mary might be your only
-              option.
-            </li>
-            <li>
-              <strong>4+ characters left:</strong> Never guess. The math is
-              firmly against you. Keep asking questions.
-            </li>
-          </ul>
-          <p>
-            The threshold, then, is simple: <strong>guess at 2 or fewer,
-            ask at 3 or more</strong> — unless you&apos;re desperate.
-          </p>
-        </section>
-
-        <section className="content-section">
-          <h2>Common Mistakes</h2>
-          <p>
-            Even experienced players fall into these traps:
-          </p>
-          <ul>
-            <li>
-              <strong>Asking about rare traits first.</strong> &quot;Are they
-              bald?&quot; feels satisfying when it hits, but it only has an 8.3%
-              chance of being useful. You&apos;re optimizing for the dopamine of
-              a lucky &quot;yes&quot; instead of the consistency of steady
-              elimination.
-            </li>
-            <li>
-              <strong>Guessing too early.</strong> With 4 characters left, you
-              have a 25% chance. That feels decent — but it means you lose 75% of
-              the time. One more question almost certainly gets you to 2, where a
-              guess is justified.
-            </li>
-            <li>
-              <strong>Not mentally tracking eliminations.</strong> After a
-              &quot;no&quot; to &quot;Do they have brown hair?&quot;, many players
-              forget to flip down Oscar or Quinn. The game handles this
-              automatically in the digital version, but in mental calculations,
-              sloppy tracking compounds into wasted questions.
-            </li>
-            <li>
-              <strong>Asking redundant questions.</strong> If you already know
-              the character is feminine-presenting with long hair, don&apos;t ask
-              &quot;Do they have facial hair?&quot; — none of the
-              feminine-presenting characters on this board do. That question
-              eliminates zero characters and wastes a turn.
-            </li>
-            <li>
-              <strong>Fixating on a &quot;suspect&quot; too early.</strong> Some
-              players decide &quot;I bet it&apos;s Bella&quot; after two questions
-              and start asking questions designed to confirm Bella rather than
-              eliminate efficiently. This is{" "}
+          <section className="content-section">
+            <h2>The Binary Search Approach: Halving Is Everything</h2>
+            <p>
+              The core idea comes from{" "}
               <a
-                href="https://en.wikipedia.org/wiki/Confirmation_bias"
+                href="https://en.wikipedia.org/wiki/Binary_search"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
-                confirmation bias
+                binary search
               </a>
-              , and it slows you down. Stay focused on splitting the board, not
-              confirming a hunch.
-            </li>
-          </ul>
-        </section>
+              , the computer science technique for finding a target by cutting
+              the search space in half at every step. Twenty questions can
+              distinguish over a million possibilities that way. With 24
+              characters, perfect halving finds any character in log₂(24) ≈ 4.6
+              questions — call it five. That&apos;s the ceiling. No strategy
+              beats it, and it sits further from casual play than it looks.
+            </p>
+            <figure className="article-figure">
+              <img
+                src="/blog/elimination-funnel.svg"
+                alt="Funnel diagram showing 24 characters narrowing to 12, then 6, then 3, then 1 or 2 remaining as four half-splitting questions are asked"
+                width={760}
+                height={400}
+                loading="lazy"
+              />
+              <figcaption>
+                The ideal game: each question halves whatever&apos;s left, so 24
+                candidates collapse to a guess in four to five questions.
+              </figcaption>
+            </figure>
+            <p>
+              Here&apos;s the way we actually evaluate a question, and it&apos;s
+              worth internalizing. If a question matches <em>k</em> of the 24
+              characters, a &quot;yes&quot; leaves you with <em>k</em> and a
+              &quot;no&quot; leaves you with 24 − <em>k</em>. Weight each
+              outcome by how likely it is and you get the{" "}
+              <strong>expected number of survivors</strong>: (k² + (24 − k)²) /
+              24. Run a few splits through that formula and the story tells
+              itself:
+            </p>
+            <ul>
+              <li>
+                A perfect <strong>12/12</strong> question leaves 12.0 characters
+                on average.
+              </li>
+              <li>
+                An <strong>8/16</strong> question (glasses, hats) leaves 13.3.
+              </li>
+              <li>
+                A <strong>2/22</strong> question (bald, white hair, bowtie)
+                leaves 20.3.
+              </li>
+            </ul>
+            <p>
+              Read that last number again. The lottery-ticket question barely
+              moves you. Lopsided questions don&apos;t just risk a bad outcome —
+              on average they <em>are</em> a bad outcome, and the formula
+              punishes them brutally. Everything else in this guide is that one
+              idea applied to three phases of the game.
+            </p>
+          </section>
 
-        <section className="content-section">
-          <h2>Advanced: Reading Your Opponent</h2>
-          <p>
-            Here&apos;s where Guess Who transcends a simple elimination game and
-            enters metagame territory. Your opponent&apos;s questions are
-            information — about <em>their</em> character.
-          </p>
-          <p>
-            Think about it: if your opponent asks &quot;Does your character wear
-            glasses?&quot;, what does that tell you? An optimal player asks
-            questions that split <em>their</em> remaining board evenly. If
-            glasses is their choice, it means glasses is a useful splitting
-            trait for their remaining pool — which usually means their own
-            character is on one side of that split.
-          </p>
-          <p>
-            But more interestingly, consider what a <em>naive</em> player reveals.
-            Many casual players avoid asking about traits their own character has,
-            subconsciously afraid of &quot;giving it away.&quot; If your opponent
-            asks &quot;Do they have facial hair?&quot;, there&apos;s a
-            psychological tendency that they themselves do <em>not</em> have a
-            character with facial hair. They&apos;re asking because it feels
-            &quot;safe.&quot;
-          </p>
-          <p>
-            You can&apos;t rely on this — a skilled opponent might deliberately
-            ask about traits their character has, knowing you&apos;ll try to
-            read them. This creates a multi-level metagame:
-          </p>
-          <ul>
-            <li>
-              <strong>Level 0:</strong> The opponent asks random questions. No
-              useful signal.
-            </li>
-            <li>
-              <strong>Level 1:</strong> The opponent avoids asking about their own
-              character&apos;s traits. Their questions reveal what their character
-              is <em>not</em>.
-            </li>
-            <li>
-              <strong>Level 2:</strong> The opponent knows you&apos;re reading
-              them, so they intentionally ask about their own traits to mislead
-              you.
-            </li>
-            <li>
-              <strong>Level 3:</strong> You know they know you know... and the
-              cycle continues.
-            </li>
-          </ul>
-          <p>
-            Against most casual players, Level 1 reading is reliable. If they ask
-            about hats, glasses, and facial hair in their first three turns,
-            their character probably doesn&apos;t have any of those — start
-            narrowing your mental model accordingly. Against stronger opponents,
-            treat their questions as noise and focus on your own optimal strategy.
-          </p>
-          <p>
-            One last trick: <strong>track the pace of your opponent&apos;s
-            eliminations</strong>. If they&apos;re flipping down many characters
-            each turn, they&apos;re asking good splitting questions and
-            approaching a guess. If their board is barely clearing, they&apos;re
-            struggling. Adjust your risk tolerance accordingly — if they&apos;re
-            close, take the 50/50 guess at 2 characters. If they&apos;re far
-            behind, play it safe and narrow to 1.
-          </p>
-        </section>
+          <section className="content-section">
+            <h2>Opening Theory: The Perfect First Question Is Baked In</h2>
+            <p>
+              The roster is split evenly: 12 feminine-presenting characters, 12
+              masculine-presenting. That single fact makes the
+              gender-presentation question mathematically unbeatable as a first
+              move on this board — it leaves exactly 12 candidates no matter
+              which answer comes back. A flawless opener exists here for any
+              player who goes looking for one.
+            </p>
+            <p>
+              From there, the strong follow-ups are the traits that stay close
+              to half. &quot;Is your character smiling?&quot; splits 14/10,
+              which expects 12.3 survivors — nearly as good. &quot;Are they
+              wearing any accessory?&quot; (earrings, a necklace, a scarf, a
+              bowtie, or a headband) splits 15/9 for an expected 12.75. And
+              here&apos;s the sleeper that&apos;s easiest to skip past: brown
+              eyes. Eleven of the 24 characters have them, an 11/13 split that
+              expects about 12.1 — the second-best opener on the board. We
+              rendered every
+              portrait at 1024×1024 partly so details like eye color would
+              actually be legible. Take advantage. You can study all 24 faces on
+              the <Link href="/characters">characters page</Link> between games.
+            </p>
+            <p>
+              Glasses and hats each split 8/16. These are gambler&apos;s
+              openers: a &quot;yes&quot; is fantastic, dropping you to 8
+              instantly, but you&apos;ll hear &quot;no&quot; two times out of
+              three and limp to 16. Playable, not optimal. The genuine traps are
+              the rare traits — bald (2), white hair (2), bowtie (2). Save
+              those for the endgame, where they belong. We&apos;ve ranked every
+              question on this board from best to worst split in{" "}
+              <Link href="/blog/best-questions-to-ask-in-guess-who">
+                a separate article
+              </Link>{" "}
+              if you want the full table.
+            </p>
+          </section>
 
-        <section
-          className="content-section"
-          style={{ borderBottom: "none", paddingBottom: 0 }}
-        >
-          <h2>Start Playing</h2>
-          <p>
-            The best way to internalize these strategies is to practice them.
-            Start with gender presentation as your opener, mentally track the
-            split ratios, and resist the urge to guess at 3.{" "}
-            <Link href="/" style={{ color: "hsl(220, 83%, 68%)" }}>
-              Play Guess Who Online
-            </Link>{" "}
-            — it&apos;s free, no sign-up required. See how many turns it takes
-            you to win once you stop playing randomly and start playing
-            optimally.
-          </p>
-        </section>
-      </div>
-      <Footer />
-    </main>
+          <section className="content-section">
+            <h2>The Mid-Game: Recount Against What&apos;s Left</h2>
+            <p>
+              This is the easiest mistake to make and one of the most expensive
+              available: evaluating questions against the original 24 instead
+              of against your <em>remaining pool</em>. Split ratios aren&apos;t
+              fixed properties of a question. They&apos;re relationships between
+              a question and whoever&apos;s still standing, and they change
+              every turn.
+            </p>
+            <p>
+              Brown hair is the clearest example. On the full board it&apos;s a
+              weak 6/18 — an expected 15 survivors, one of the worst openers
+              available. But suppose your first two questions got you down to
+              six characters and three of them happen to have brown hair. The
+              exact same words are now a perfect 50/50 split. Facial hair works
+              the same way: 7/17 makes it a mediocre opener (expected 14.1),
+              yet three turns in it&apos;s often the cleanest cut you have. So
+              the mid-game rule is simple: before every question,{" "}
+              <strong>recount the split against your current candidates</strong>
+              , not the printed board.
+            </p>
+            <p>
+              The other mid-game skill is knowing the overlaps, because
+              overlaps create redundant questions — and a redundant question is
+              a wasted turn. A few worth memorizing on our board:
+            </p>
+            <div className="portrait-grid">
+              <div className="portrait">
+                <img
+                  src="/characters/marco.png"
+                  alt="Marco"
+                  width={200}
+                  height={200}
+                  loading="lazy"
+                />
+                <span>Marco</span>
+              </div>
+              <div className="portrait">
+                <img
+                  src="/characters/fiona.png"
+                  alt="Fiona"
+                  width={200}
+                  height={200}
+                  loading="lazy"
+                />
+                <span>Fiona</span>
+              </div>
+              <div className="portrait">
+                <img
+                  src="/characters/rosa.png"
+                  alt="Rosa"
+                  width={200}
+                  height={200}
+                  loading="lazy"
+                />
+                <span>Rosa</span>
+              </div>
+              <div className="portrait">
+                <img
+                  src="/characters/oscar.png"
+                  alt="Oscar"
+                  width={200}
+                  height={200}
+                  loading="lazy"
+                />
+                <span>Oscar</span>
+              </div>
+            </div>
+            <p>
+              Marco is the only character who wears both glasses and a hat — so
+              if glasses already came back &quot;yes,&quot; asking about hats
+              can only ever confirm or eliminate one guy. Fiona and Rosa each
+              wear two accessories (earrings and a necklace), which makes
+              &quot;earrings?&quot; and &quot;necklace?&quot; partially
+              redundant against certain pools. Oscar packs three distinctive
+              traits into one face: bald, bearded, and wearing a necklace.
+              And since all seven characters with facial hair are
+              masculine-presenting, asking about beards after a
+              &quot;feminine&quot; answer eliminates exactly nobody. It is a
+              completely wasted turn, and an easy one to walk into.
+            </p>
+          </section>
+
+          <section className="content-section">
+            <h2>The Endgame: When to Stop Asking and Guess</h2>
+            <p>
+              Down to a handful of candidates, Guess Who stops being a puzzle
+              and becomes a race, and the right move depends on expected value.
+              With <em>n</em> candidates, guessing now wins 1/n of the time.
+              Asking one more good question and guessing next turn wins almost
+              always — but it costs a turn, and your opponent moves in between.
+            </p>
+            <p>
+              The interesting case is exactly two candidates. Guess now and
+              it&apos;s a coin flip: 50%. Ask your splitting question instead
+              and you&apos;ll (usually) close it out next turn with certainty.
+              If your opponent is still wandering around with eight candidates,
+              take the safe route — the extra turn costs you nothing. But if
+              they&apos;re about to guess correctly,{" "}
+              <strong>a 50% gamble beats a certain loss</strong>. That
+              comparison — 50% now versus 0% after they win — is the entire
+              decision, and it&apos;s an easy one to get backwards under
+              pressure.
+            </p>
+            <p>
+              The failure mode worth naming here isn&apos;t a bad opener or
+              sloppy tracking. It&apos;s{" "}
+              <strong>hoarding certainty</strong>. Picture it: a player grinds
+              beautifully down to two candidates, then freezes and asks a
+              confirming question — sometimes two — because guessing feels like
+              gambling and asking feels like diligence. Meanwhile the opponent,
+              sitting at three candidates and knowing they&apos;re behind,
+              takes the 33% shot and wins. The certainty the careful player was
+              protecting never got spent. In a race, unused certainty is worth
+              nothing.
+            </p>
+            <p>
+              How do you know whether your opponent is close? You don&apos;t
+              need to guess — you answered every question they asked. You know
+              exactly what they learned and when, which means you can
+              reconstruct their candidate pool in your head, sometimes to the
+              exact number. It&apos;s the kind of bookkeeping that&apos;s easy
+              to let slide mid-game. Don&apos;t. It&apos;s the difference
+              between gambling at the right moment and gambling blind. The
+              quick reference: at one candidate, guess, obviously. At two, read
+              the race. At three, ask one more question unless
+              this is genuinely your last turn alive. At four or more, never
+              guess — 25% is a losing bet dressed up as a bold one.
+            </p>
+          </section>
+
+          <section
+            className="content-section"
+            style={{ borderBottom: "none", paddingBottom: 0 }}
+          >
+            <h2>The Cheat Sheet</h2>
+            <p>Everything above, compressed to three lines:</p>
+            <ul>
+              <li>
+                <strong>Opener:</strong> ask the 12/12 gender-presentation
+                question — or brown eyes (11/13) if you want to be
+                unpredictable. Never open with a trait fewer than 8 characters
+                share.
+              </li>
+              <li>
+                <strong>Mid-game:</strong> before every question, recount the
+                split against your <em>remaining</em> candidates, not the
+                original 24. A weak opener is often a perfect fourth question.
+              </li>
+              <li>
+                <strong>Endgame:</strong> at two candidates, guess if the race
+                is close — 50% beats a certain loss — and only confirm down to
+                one when you know you&apos;re ahead. Never guess at four or
+                more.
+              </li>
+            </ul>
+            <p>
+              Play all of that perfectly and you&apos;ll land right around the
+              five-question mark, which is where the math runs out — everything
+              past it is reading the person on the other side of the board.
+            </p>
+          </section>
+
+          <AuthorBio />
+        </div>
+        <Footer />
+      </main>
+    </>
   );
 }

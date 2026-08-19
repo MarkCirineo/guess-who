@@ -1,0 +1,42 @@
+<svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-label="Diagram showing how perfect half-splitting questions narrow 24 characters to 1 in about 4 to 5 questions: 24 to 12 to 6 to 3 to 2 to 1.">
+  <rect width="760" height="400" fill="#1c1f2b"/>
+  <text x="30" y="38" fill="#e8eaf2" font-size="17" font-weight="700">The binary search path: 24 characters → 1 in ~4–5 questions</text>
+  <text x="30" y="60" fill="#9aa3c0" font-size="12.5">Each perfect question halves the remaining group — log₂(24) ≈ 4.6</text>
+
+  <!-- funnel bars, centered on x=380; width = count * 24px; height 34 -->
+  <!-- 24 -->
+  <rect x="92" y="92" width="576" height="34" rx="6" fill="#3B76ED"/>
+  <text x="380" y="114" fill="#ffffff" font-size="14" font-weight="700" text-anchor="middle">24 characters</text>
+  <text x="682" y="114" fill="#9aa3c0" font-size="12" text-anchor="start">start</text>
+
+  <!-- arrow + question label -->
+  <line x1="380" y1="126" x2="380" y2="142" stroke="#565d75" stroke-width="2"/>
+  <text x="394" y="139" fill="#9aa3c0" font-size="11.5">Q1 · "Do they look feminine?" (12/12)</text>
+
+  <!-- 12 -->
+  <rect x="236" y="146" width="288" height="34" rx="6" fill="#3B76ED"/>
+  <text x="380" y="168" fill="#ffffff" font-size="14" font-weight="700" text-anchor="middle">12 left</text>
+
+  <line x1="380" y1="180" x2="380" y2="196" stroke="#565d75" stroke-width="2"/>
+  <text x="394" y="193" fill="#9aa3c0" font-size="11.5">Q2 · split the remaining 12 (6/6)</text>
+
+  <!-- 6 -->
+  <rect x="308" y="200" width="144" height="34" rx="6" fill="#3B76ED"/>
+  <text x="380" y="222" fill="#ffffff" font-size="14" font-weight="700" text-anchor="middle">6 left</text>
+
+  <line x1="380" y1="234" x2="380" y2="250" stroke="#565d75" stroke-width="2"/>
+  <text x="394" y="247" fill="#9aa3c0" font-size="11.5">Q3 · split the remaining 6 (3/3)</text>
+
+  <!-- 3 -->
+  <rect x="344" y="254" width="72" height="34" rx="6" fill="#3B76ED"/>
+  <text x="380" y="276" fill="#ffffff" font-size="14" font-weight="700" text-anchor="middle">3</text>
+
+  <line x1="380" y1="288" x2="380" y2="304" stroke="#565d75" stroke-width="2"/>
+  <text x="394" y="301" fill="#9aa3c0" font-size="11.5">Q4 · split 3 (best you can do is 2/1)</text>
+
+  <!-- 1-2 -->
+  <rect x="356" y="308" width="48" height="34" rx="6" fill="#3B76ED"/>
+  <text x="380" y="330" fill="#ffffff" font-size="14" font-weight="700" text-anchor="middle">1–2</text>
+
+  <text x="380" y="372" fill="#ECB309" font-size="12.5" font-weight="600" text-anchor="middle">→ guess with certainty, or ask one confirming question first</text>
+</svg>

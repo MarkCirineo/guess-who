@@ -1,15 +1,20 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy — Guess Who Online",
   description:
     "Privacy policy for Guess Who Online. Learn how we handle your data, cookies, and third-party services.",
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPolicy() {
   return (
+    <>
+    <Header />
     <main className="content-page">
       <div
         className="content-card glass animate-slide-in"
@@ -162,6 +167,7 @@ export default function PrivacyPolicy() {
 
       <Footer />
     </main>
+    </>
   );
 }
 

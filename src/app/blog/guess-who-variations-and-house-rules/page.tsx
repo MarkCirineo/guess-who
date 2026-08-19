@@ -1,16 +1,44 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AuthorByline from "@/components/AuthorByline";
+import AuthorBio from "@/components/AuthorBio";
+import JsonLd from "@/components/JsonLd";
+import { SHIP_DATE } from "@/lib/blog";
+import { pageMetadata, articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "5 Fun Guess Who Variations & House Rules to Try — Guess Who Online",
+export const metadata: Metadata = pageMetadata({
+  title:
+    "5 Fun Guess Who Variations & House Rules to Try — Guess Who Online",
   description:
     "Spice up your Guess Who games with these creative variations and house rules. From speed rounds to reverse mode, these twists make every game feel fresh.",
-};
+  path: "/blog/guess-who-variations-and-house-rules",
+  ogType: "article",
+});
 
 export default function GuessWhoVariationsAndHouseRules() {
   return (
+    <>
+    <Header />
     <main className="content-page">
+      <JsonLd
+        data={[
+          articleJsonLd({
+            title: "5 Fun Guess Who Variations & House Rules to Try",
+            description:
+              "Five creative Guess Who variations and house rules, and the trait math that makes each one work.",
+            path: "/blog/guess-who-variations-and-house-rules",
+            published: "2026-07-13",
+            updated: SHIP_DATE,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: "Variations & House Rules", path: "/blog/guess-who-variations-and-house-rules" },
+          ]),
+        ]}
+      />
       <div
         className="content-card glass animate-slide-in"
         style={{ padding: "2.5rem" }}
@@ -31,15 +59,11 @@ export default function GuessWhoVariationsAndHouseRules() {
         </Link>
 
         <h1>5 Fun Guess Who Variations &amp; House Rules to Try</h1>
-        <p
-          style={{
-            color: "hsl(230, 10%, 50%)",
-            fontSize: "0.8rem",
-            marginBottom: "2rem",
-          }}
-        >
-          Published July 1, 2026 · 4 min read
-        </p>
+        <AuthorByline
+          published="2026-07-13"
+          updated={SHIP_DATE}
+          readTime="5 min read"
+        />
 
         <section className="content-section">
           <h2>Why Play With House Rules?</h2>
@@ -243,6 +267,20 @@ export default function GuessWhoVariationsAndHouseRules() {
 
         <section className="content-section">
           <h2>5. Team Mode (2v2)</h2>
+          <div className="portrait-grid">
+            {["oscar", "xena", "hannah", "ethan", "fiona", "george"].map((id) => (
+              <div className="portrait" key={id}>
+                <img
+                  src={`/characters/${id}.png`}
+                  alt={`${id.charAt(0).toUpperCase() + id.slice(1)}, one of the 24 Guess Who Online characters`}
+                  width={200}
+                  height={200}
+                  loading="lazy"
+                />
+                <span>{id.charAt(0).toUpperCase() + id.slice(1)}</span>
+              </div>
+            ))}
+          </div>
           <p>
             <strong>The rule: </strong> Four players, two teams of two. Each team
             shares one board and one secret character. Partners take turns being
@@ -309,16 +347,19 @@ export default function GuessWhoVariationsAndHouseRules() {
             favorite combination.
           </p>
           <p>
-            Ready to put these variations into practice?{" "}
-            <Link href="/" style={{ color: "hsl(220, 83%, 68%)" }}>
-              Play Guess Who Online
-            </Link>{" "}
-            — it&apos;s free, no sign-up required. These variations work in
-            both online multiplayer and local pass &amp; play mode.
+            One caution worth naming: every rule here trades some of the
+            game&apos;s clean information structure for tension. Speed Round
+            trades accuracy for pressure, Trait Swap trades reliable answers
+            for bluffing, Team Mode trades private reasoning for negotiation.
+            That trade is the point &mdash; but it also means a house rule that
+            falls flat is usually one that removed information the players
+            still needed. If a variant stops being fun, that is normally why.
           </p>
         </section>
+        <AuthorBio />
       </div>
       <Footer />
     </main>
+    </>
   );
 }

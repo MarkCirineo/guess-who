@@ -1,15 +1,20 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact — Guess Who Online",
   description:
-    "Get in touch with the Guess Who Online team. Send us feedback, bug reports, or feature suggestions.",
-};
+    "Get in touch with the PlayGuessWho Team, the developers of Guess Who Online. Send feedback, bug reports, or feature suggestions.",
+  path: "/contact",
+});
 
 export default function Contact() {
   return (
+    <>
+    <Header />
     <main className="content-page">
       <div className="content-card glass animate-slide-in" style={{ padding: "2.5rem" }}>
         <Link
@@ -30,10 +35,10 @@ export default function Contact() {
         <h1>Get in Touch</h1>
 
         <p style={{ marginBottom: "1.75rem" }}>
-          Guess Who Online is a small passion project, and we genuinely
-          appreciate hearing from the people who play it. Whether you&apos;ve
-          found a bug, have an idea for a new feature, or just want to say
-          hello&nbsp;— we&apos;d love to hear from you.
+          Guess Who Online is a small independent project — we&apos;re the
+          PlayGuessWho Team, the developers, and we read every message.
+          Whether you&apos;ve found a bug, have an idea for a new feature, or
+          just want to say hello&nbsp;— we&apos;d love to hear from you.
         </p>
 
         {/* Prominent email card */}
@@ -113,8 +118,9 @@ export default function Contact() {
             <div>
               <h3>How does the game make money?</h3>
               <p>
-                The site is supported through non-intrusive advertising via
-                Google AdSense. That&apos;s it&nbsp;— no paywalls, no premium
+                The site is free and always will be. It&apos;s supported by
+                non-intrusive advertising and by the occasional generous
+                player who buys us a coffee&nbsp;— no paywalls, no premium
                 tiers.
               </p>
             </div>
@@ -130,5 +136,6 @@ export default function Contact() {
       </div>
       <Footer />
     </main>
+    </>
   );
 }
