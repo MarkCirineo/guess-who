@@ -1,15 +1,20 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms of Service — Guess Who Online",
   description:
     "Terms of Service for Guess Who Online. Read the rules, disclaimers, and conditions that govern your use of our free multiplayer browser game.",
-};
+  path: "/terms",
+});
 
 export default function TermsOfService() {
   return (
+    <>
+    <Header />
     <main className="content-page">
       <div className="content-card glass animate-slide-in" style={{ padding: "2.5rem" }}>
         <Link
@@ -202,5 +207,6 @@ export default function TermsOfService() {
       </div>
       <Footer />
     </main>
+    </>
   );
 }

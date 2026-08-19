@@ -14,6 +14,9 @@ export default function Footer() {
               <Link href="/how-to-play">How to Play</Link>
             </li>
             <li>
+              <Link href="/characters">Characters</Link>
+            </li>
+            <li>
               <Link href="/blog">Blog</Link>
             </li>
           </ul>
@@ -44,6 +47,9 @@ export default function Footer() {
         <div className="footer-column">
           <h3>Legal</h3>
           <ul>
+            <li>
+              <Link href="/editorial-policy">Editorial Policy</Link>
+            </li>
             <li>
               <Link href="/privacy">Privacy Policy</Link>
             </li>
@@ -76,6 +82,11 @@ export default function Footer() {
           </a>
         </span>
       </div>
+      <p className="footer-disclaimer">
+        Guess Who is a trademark of Hasbro, Inc. This site is an independent
+        fan project and is not affiliated with, endorsed by, or sponsored by
+        Hasbro. All character artwork is original.
+      </p>
     </footer>
   );
 }

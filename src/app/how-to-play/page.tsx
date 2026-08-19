@@ -1,17 +1,57 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata, faqJsonLd } from "@/lib/seo";
 import { characters } from "@/lib/characters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "How to Play Guess Who Online — Rules, Characters & Strategy",
   description:
     "Learn how to play Guess Who Online with our complete guide. Game rules, all 24 characters and their traits, strategy tips, and frequently asked questions.",
-};
+  path: "/how-to-play",
+});
 
 export default function HowToPlay() {
   return (
+    <>
+    <Header />
     <main className="content-page">
+      <JsonLd
+        data={faqJsonLd([
+          {
+            question: "Do I need to create an account?",
+            answer:
+              "No. Guess Who Online requires no sign-up, no email, and no password. Just enter a display name and play.",
+          },
+          {
+            question: "Is it free?",
+            answer:
+              "Yes, completely free. The game is supported by non-intrusive advertising.",
+          },
+          {
+            question: "Can I play on my phone?",
+            answer:
+              "Absolutely. The game is fully responsive and works on phones, tablets, and desktop browsers. No app download needed.",
+          },
+          {
+            question: "What happens if I lose connection?",
+            answer:
+              "If you temporarily lose your internet connection, the game will attempt to reconnect you automatically. If reconnection fails, you can rejoin the room using the same room code.",
+          },
+          {
+            question: "How many characters are in the game?",
+            answer:
+              "There are 24 unique characters, each with their own distinct combination of traits like hair color, eye color, glasses, hats, facial hair, and accessories.",
+          },
+          {
+            question: "Can I play with more than two players?",
+            answer:
+              "Guess Who is designed as a two-player game. Each room supports exactly two players, staying true to the original board game format.",
+          },
+        ])}
+      />
       <div
         className="content-card glass animate-slide-in"
         style={{ padding: "2.5rem" }}
@@ -168,7 +208,26 @@ export default function HowToPlay() {
           <p>
             Every game features the same 24 characters, each with a unique
             combination of physical traits. Knowing these traits is key to
-            asking effective questions. Here&apos;s the complete reference:
+            asking effective questions. Here are a few of them:
+          </p>
+          <div className="portrait-grid">
+            {["alex", "bella", "george", "nina", "penny", "umar"].map((id) => (
+              <div className="portrait" key={id}>
+                <img
+                  src={`/characters/${id}.png`}
+                  alt={`${id.charAt(0).toUpperCase() + id.slice(1)}, one of the 24 Guess Who Online characters`}
+                  width={200}
+                  height={200}
+                  loading="lazy"
+                />
+                <span>{id.charAt(0).toUpperCase() + id.slice(1)}</span>
+              </div>
+            ))}
+          </div>
+          <p>
+            Below is the complete trait reference — and for all 24 portraits,
+            trait distributions, and design notes, see the full{" "}
+            <Link href="/characters">characters guide</Link>:
           </p>
           <div style={{ overflowX: "auto", marginTop: "1rem" }}>
             <table className="trait-table">
@@ -321,5 +380,6 @@ export default function HowToPlay() {
 
       <Footer />
     </main>
+    </>
   );
 }

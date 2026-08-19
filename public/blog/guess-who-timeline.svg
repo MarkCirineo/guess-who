@@ -1,0 +1,48 @@
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-label="Timeline of Guess Who history: invented 1979 by Ora and Theo Coster and debuting in the Netherlands; Milton Bradley brings it to the US in 1982; Hasbro acquires Milton Bradley 1984; brands consolidated under Hasbro 1998; character diversity update 2014; browser-based online versions in the 2020s.">
+  <rect width="760" height="300" fill="#1c1f2b"/>
+  <text x="30" y="38" fill="#e8eaf2" font-size="17" font-weight="700">Guess Who through the decades</text>
+
+  <!-- timeline axis -->
+  <line x1="50" y1="150" x2="710" y2="150" stroke="#565d75" stroke-width="2"/>
+
+  <!-- 1979 -->
+  <circle cx="80" cy="150" r="7" fill="#3B76ED"/>
+  <text x="80" y="122" fill="#e8eaf2" font-size="14" font-weight="700" text-anchor="middle">1979</text>
+  <text x="80" y="178" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Invented by Ora &amp;</text>
+  <text x="80" y="192" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Theo Coster; debuts in</text>
+  <text x="80" y="206" fill="#c8cbd8" font-size="10.5" text-anchor="middle">the Netherlands</text>
+
+  <!-- 1982 -->
+  <circle cx="200" cy="150" r="7" fill="#3B76ED"/>
+  <text x="200" y="122" fill="#e8eaf2" font-size="14" font-weight="700" text-anchor="middle">1982</text>
+  <text x="200" y="178" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Milton Bradley</text>
+  <text x="200" y="192" fill="#c8cbd8" font-size="10.5" text-anchor="middle">brings it to the US</text>
+
+  <!-- 1984 -->
+  <circle cx="320" cy="150" r="7" fill="#3B76ED"/>
+  <text x="320" y="122" fill="#e8eaf2" font-size="14" font-weight="700" text-anchor="middle">1984</text>
+  <text x="320" y="178" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Hasbro acquires</text>
+  <text x="320" y="192" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Milton Bradley</text>
+
+  <!-- 1998 -->
+  <circle cx="440" cy="150" r="7" fill="#3B76ED"/>
+  <text x="440" y="122" fill="#e8eaf2" font-size="14" font-weight="700" text-anchor="middle">1998</text>
+  <text x="440" y="178" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Brands consolidated;</text>
+  <text x="440" y="192" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Guess Who becomes</text>
+  <text x="440" y="206" fill="#c8cbd8" font-size="10.5" text-anchor="middle">a Hasbro title</text>
+
+  <!-- 2014 -->
+  <circle cx="560" cy="150" r="7" fill="#3B76ED"/>
+  <text x="560" y="122" fill="#e8eaf2" font-size="14" font-weight="700" text-anchor="middle">2014</text>
+  <text x="560" y="178" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Character roster</text>
+  <text x="560" y="192" fill="#c8cbd8" font-size="10.5" text-anchor="middle">diversity update</text>
+
+  <!-- 2020s -->
+  <circle cx="680" cy="150" r="7" fill="#ECB309"/>
+  <text x="680" y="122" fill="#e8eaf2" font-size="14" font-weight="700" text-anchor="middle">2020s</text>
+  <text x="680" y="178" fill="#c8cbd8" font-size="10.5" text-anchor="middle">Browser-based</text>
+  <text x="680" y="192" fill="#c8cbd8" font-size="10.5" text-anchor="middle">online versions</text>
+  <text x="680" y="206" fill="#c8cbd8" font-size="10.5" text-anchor="middle">played worldwide</text>
+
+  <text x="380" y="262" fill="#9aa3c0" font-size="11" font-style="italic" text-anchor="middle">Nearly five decades of the same elegant core: two players, 24 faces, yes-or-no questions.</text>
+</svg>

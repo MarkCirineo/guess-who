@@ -5,7 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/room/", "/local"],
+      // Only ephemeral room instances are blocked — /local is a real
+      // landing page with content and belongs in the index.
+      disallow: ["/room/"],
     },
     sitemap: "https://playguesswho.net/sitemap.xml",
   };

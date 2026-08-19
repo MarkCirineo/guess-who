@@ -1,0 +1,77 @@
+<svg viewBox="0 0 760 480" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-label="Bar chart showing how each opening question splits the 24 Guess Who characters into Yes and No groups. 'Do they look feminine?' splits the board a perfect 12 and 12.">
+  <rect width="760" height="480" fill="#1c1f2b"/>
+  <text x="30" y="38" fill="#e8eaf2" font-size="17" font-weight="700">How each question splits the 24-character board</text>
+  <text x="30" y="60" fill="#9aa3c0" font-size="12.5">Yes answers (blue) vs No answers (gray) — measured from the real Guess Who Online character set</text>
+
+  <!-- legend -->
+  <rect x="562" y="26" width="11" height="11" rx="2.5" fill="#3B76ED"/>
+  <text x="579" y="36" fill="#c8cbd8" font-size="12">Yes</text>
+  <rect x="622" y="26" width="11" height="11" rx="2.5" fill="#565d75"/>
+  <text x="639" y="36" fill="#c8cbd8" font-size="12">No</text>
+
+  <!-- rows: label width 210, bar area x=240..710 (470px for 24 chars => 19.58px/char), 2px gap between segments -->
+  <!-- Feminine 12/12 -->
+  <text x="228" y="106" fill="#c8cbd8" font-size="13" text-anchor="end">Do they look feminine?</text>
+  <rect x="240" y="92" width="233" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="477" y="92" width="233" height="20" rx="4" fill="#565d75"/>
+  <text x="352" y="106" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">12</text>
+  <text x="589" y="106" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">12</text>
+  <text x="240" y="84" fill="#ECB309" font-size="11" font-weight="600">★ perfect split — no bad answer</text>
+
+  <!-- Smiling 14/10 -->
+  <text x="228" y="146" fill="#c8cbd8" font-size="13" text-anchor="end">Are they smiling?</text>
+  <rect x="240" y="132" width="272" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="516" y="132" width="194" height="20" rx="4" fill="#565d75"/>
+  <text x="376" y="146" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">14</text>
+  <text x="613" y="146" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">10</text>
+
+  <!-- Any accessories 15/9 -->
+  <text x="228" y="186" fill="#c8cbd8" font-size="13" text-anchor="end">Do they have any accessories?</text>
+  <rect x="240" y="172" width="292" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="536" y="172" width="174" height="20" rx="4" fill="#565d75"/>
+  <text x="386" y="186" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">15</text>
+  <text x="623" y="186" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">9</text>
+
+  <!-- Glasses 8/16 -->
+  <text x="228" y="226" fill="#c8cbd8" font-size="13" text-anchor="end">Do they wear glasses?</text>
+  <rect x="240" y="212" width="155" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="399" y="212" width="311" height="20" rx="4" fill="#565d75"/>
+  <text x="317" y="226" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">8</text>
+  <text x="554" y="226" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">16</text>
+
+  <!-- Hat 8/16 -->
+  <text x="228" y="266" fill="#c8cbd8" font-size="13" text-anchor="end">Are they wearing a hat?</text>
+  <rect x="240" y="252" width="155" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="399" y="252" width="311" height="20" rx="4" fill="#565d75"/>
+  <text x="317" y="266" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">8</text>
+  <text x="554" y="266" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">16</text>
+
+  <!-- Facial hair 7/17 -->
+  <text x="228" y="306" fill="#c8cbd8" font-size="13" text-anchor="end">Do they have facial hair?</text>
+  <rect x="240" y="292" width="135" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="379" y="292" width="331" height="20" rx="4" fill="#565d75"/>
+  <text x="307" y="306" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">7</text>
+  <text x="544" y="306" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">17</text>
+
+  <!-- Blue eyes 7/17 -->
+  <text x="228" y="346" fill="#c8cbd8" font-size="13" text-anchor="end">Do they have blue eyes?</text>
+  <rect x="240" y="332" width="135" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="379" y="332" width="331" height="20" rx="4" fill="#565d75"/>
+  <text x="307" y="346" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">7</text>
+  <text x="544" y="346" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">17</text>
+
+  <!-- Brown hair 6/18 -->
+  <text x="228" y="386" fill="#c8cbd8" font-size="13" text-anchor="end">Do they have brown hair?</text>
+  <rect x="240" y="372" width="115" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="359" y="372" width="351" height="20" rx="4" fill="#565d75"/>
+  <text x="297" y="386" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">6</text>
+  <text x="534" y="386" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">18</text>
+
+  <!-- Bowtie 2/22 -->
+  <text x="228" y="426" fill="#c8cbd8" font-size="13" text-anchor="end">Do they wear a bowtie?</text>
+  <rect x="240" y="412" width="37" height="20" rx="4" fill="#3B76ED"/>
+  <rect x="281" y="412" width="429" height="20" rx="4" fill="#565d75"/>
+  <text x="258" y="426" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">2</text>
+  <text x="495" y="426" fill="#e8eaf2" font-size="11.5" font-weight="700" text-anchor="middle">22</text>
+  <text x="240" y="450" fill="#9aa3c0" font-size="11" font-style="italic">A "No" here eliminates only 2 of 24 characters — the classic wasted turn</text>
+</svg>

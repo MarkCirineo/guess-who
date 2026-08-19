@@ -16,6 +16,11 @@
 # next.js
 /.next/
 /out/
+# Some tooling writes to a literal Windows path (with lookalike chars) instead
+# of the real one, creating a stray build tree inside the repo. Catch any .next
+# regardless of depth so it can never be committed again.
+.next/
+**/.next/
 
 # production
 /build
