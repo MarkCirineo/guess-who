@@ -292,6 +292,7 @@ export default function GameOverScreen({ game }: { game: GameData }) {
               fontSize: "0.75rem",
             }}
           >
+            <span style={{ color: "hsl(230, 10%, 45%)" }}>Also coming:</span>
             {FEATURES.filter((f) => f !== featured).map((feature) => (
               <a
                 key={feature}
