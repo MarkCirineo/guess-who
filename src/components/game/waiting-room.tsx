@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { GameData } from "@/hooks/use-game-state";
+import { COMING_SOON_FEATURES, comingSoonUrl } from "@/lib/arcadekit";
 
 interface WaitingRoomProps {
   game: GameData;
@@ -288,7 +289,7 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
         )}
       </div>
 
-      {/* ArcadeKit cross-promo — only while waiting for player 2 */}
+      {/* Coming-soon feature CTA (ArcadeKit) — only while waiting for player 2 */}
       {game.players.length < 2 && (
         <div
           className="animate-fade-in"
@@ -301,7 +302,7 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
           }}
         >
           <a
-            href="https://arcadekit.games"
+            href={comingSoonUrl("custom-boards", "waiting-room")}
             target="_blank"
             rel="noopener"
             className="network-link"
@@ -309,6 +310,7 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              flexWrap: "wrap",
               gap: "0.5rem",
               padding: "0.75rem 1rem",
               borderRadius: "0.75rem",
@@ -317,14 +319,16 @@ export default function WaitingRoom({ game, roomCode }: WaitingRoomProps) {
               fontSize: "0.8rem",
               textDecoration: "none",
             }}
-            id="arcadekit-waiting-link"
-            data-umami-event="arcadekit-click"
+            id="cta-custom-boards-waiting"
+            data-umami-event={COMING_SOON_FEATURES["custom-boards"].event}
             data-umami-event-location="waiting-room"
           >
-            <span style={{ fontSize: "0.75rem", opacity: 0.5 }}>While you wait...</span>
+            <span style={{ fontSize: "0.75rem", opacity: 0.5 }}>Coming soon</span>
             <span>
-              Check out{" "}
-              <span style={{ fontWeight: 700 }}>ArcadeKit</span>
+              {COMING_SOON_FEATURES["custom-boards"].emoji}{" "}
+              <span style={{ fontWeight: 700 }}>
+                {COMING_SOON_FEATURES["custom-boards"].label}
+              </span>
             </span>
             <span style={{ fontSize: "0.7rem", opacity: 0.5 }}>→</span>
           </a>

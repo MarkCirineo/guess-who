@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { COMING_SOON_FEATURES, comingSoonUrl } from "@/lib/arcadekit";
 
 /** Interactive create/join card on the homepage. */
 export default function HomeActions() {
@@ -78,6 +79,26 @@ export default function HomeActions() {
           >
             📱 Local Pass & Play
           </button>
+          <a
+            href={comingSoonUrl("custom-boards", "home")}
+            target="_blank"
+            rel="noopener"
+            style={{
+              textAlign: "center",
+              fontSize: "0.8rem",
+              color: "hsl(35, 80%, 65%)",
+              textDecoration: "none",
+            }}
+            id="cta-custom-boards-home"
+            data-umami-event={COMING_SOON_FEATURES["custom-boards"].event}
+            data-umami-event-location="home"
+          >
+            {COMING_SOON_FEATURES["custom-boards"].emoji} Coming soon:{" "}
+            <span style={{ fontWeight: 600 }}>
+              {COMING_SOON_FEATURES["custom-boards"].label.toLowerCase()}
+            </span>{" "}
+            →
+          </a>
         </div>
       ) : showCreate ? (
         <div

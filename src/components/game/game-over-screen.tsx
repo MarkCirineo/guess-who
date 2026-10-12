@@ -1,10 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { GameData } from "@/hooks/use-game-state";
+import {
+  COMING_SOON_FEATURES,
+  comingSoonUrl,
+  type ComingSoonFeature,
+} from "@/lib/arcadekit";
+
+const FEATURES = Object.keys(COMING_SOON_FEATURES) as ComingSoonFeature[];
 
 export default function GameOverScreen({ game }: { game: GameData }) {
   const confettiRef = useRef(false);
+  // Rotate which feature gets the big card so placement doesn't skew the
+  // click comparison. Only rendered client-side after a game, so no SSR mismatch.
+  const [featured] = useState(
+    () => FEATURES[Math.floor(Math.random() * FEATURES.length)]
+  );
 
   useEffect(() => {
     if (game.iWon && !confettiRef.current) {
@@ -219,44 +231,85 @@ export default function GameOverScreen({ game }: { game: GameData }) {
           </button>
         </div>
 
-        {/* Buy Me a Coffee */}
-        <a
-          href="https://buymeacoffee.com/arcadekit"
-          target="_blank"
-          rel="noopener"
+        {/* Coming-soon feature CTAs (ArcadeKit) */}
+        <div
           className="animate-fade-in"
           style={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            flexDirection: "column",
             gap: "0.5rem",
             marginTop: "1rem",
-            padding: "0.6rem",
-            borderRadius: "0.75rem",
-            background: "hsla(35, 80%, 50%, 0.08)",
-            border: "1px solid hsla(35, 80%, 50%, 0.15)",
-            fontSize: "0.8rem",
-            color: "hsl(35, 80%, 65%)",
-            textDecoration: "none",
-            transition: "all 0.2s ease",
             animationDelay: "0.3s",
             animationFillMode: "both",
           }}
-          id="bmc-gameover-link"
-          data-umami-event="bmc-click"
-          data-umami-event-location="game-over"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "hsla(35, 80%, 50%, 0.15)";
-            e.currentTarget.style.borderColor = "hsla(35, 80%, 50%, 0.3)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "hsla(35, 80%, 50%, 0.08)";
-            e.currentTarget.style.borderColor = "hsla(35, 80%, 50%, 0.15)";
-          }}
         >
-          <span>☕</span>
-          <span>Enjoying the game? <span style={{ fontWeight: 600 }}>Buy me a coffee</span></span>
-        </a>
+          <a
+            href={comingSoonUrl(featured, "game-over")}
+            target="_blank"
+            rel="noopener"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              padding: "0.7rem",
+              borderRadius: "0.75rem",
+              background: "hsla(35, 80%, 50%, 0.08)",
+              border: "1px solid hsla(35, 80%, 50%, 0.15)",
+              fontSize: "0.85rem",
+              color: "hsl(35, 80%, 65%)",
+              textDecoration: "none",
+              transition: "all 0.2s ease",
+            }}
+            id={`cta-${featured}-gameover`}
+            data-umami-event={COMING_SOON_FEATURES[featured].event}
+            data-umami-event-location="game-over"
+            data-umami-event-placement="featured"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "hsla(35, 80%, 50%, 0.15)";
+              e.currentTarget.style.borderColor = "hsla(35, 80%, 50%, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "hsla(35, 80%, 50%, 0.08)";
+              e.currentTarget.style.borderColor = "hsla(35, 80%, 50%, 0.15)";
+            }}
+          >
+            <span>{COMING_SOON_FEATURES[featured].emoji}</span>
+            <span>
+              <span style={{ fontWeight: 600 }}>
+                {COMING_SOON_FEATURES[featured].label}
+              </span>{" "}
+              <span style={{ opacity: 0.7 }}>· coming soon</span>
+            </span>
+            <span style={{ fontSize: "0.75rem", opacity: 0.6 }}>→</span>
+          </a>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              gap: "0.25rem 1rem",
+              fontSize: "0.75rem",
+            }}
+          >
+            <span style={{ color: "hsl(230, 10%, 45%)" }}>Also coming:</span>
+            {FEATURES.filter((f) => f !== featured).map((feature) => (
+              <a
+                key={feature}
+                href={comingSoonUrl(feature, "game-over")}
+                target="_blank"
+                rel="noopener"
+                style={{ color: "hsl(230, 10%, 60%)", textDecoration: "none" }}
+                id={`cta-${feature}-gameover`}
+                data-umami-event={COMING_SOON_FEATURES[feature].event}
+                data-umami-event-location="game-over"
+                data-umami-event-placement="small"
+              >
+                {COMING_SOON_FEATURES[feature].emoji} {COMING_SOON_FEATURES[feature].label} →
+              </a>
+            ))}
+          </div>
+        </div>
 
         {/* ArcadeKit cross-promo */}
         <div
