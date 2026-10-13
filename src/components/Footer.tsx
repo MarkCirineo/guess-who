@@ -85,7 +85,8 @@ export default function Footer() {
       <p className="footer-disclaimer">
         Guess Who is a trademark of Hasbro, Inc. This site is an independent
         fan project and is not affiliated with, endorsed by, or sponsored by
-        Hasbro. All character artwork is original.
+        Hasbro. All character artwork is original. As an Amazon Associate we
+        earn from qualifying purchases.
       </p>
     </footer>
   );

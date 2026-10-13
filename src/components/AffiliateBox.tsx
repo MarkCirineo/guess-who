@@ -13,6 +13,10 @@ export default function AffiliateBox({ title, intro, products, page }: Affiliate
   return (
     <aside className="affiliate-box" aria-label={title}>
       <h2>{title}</h2>
+      <p className="affiliate-disclosure">
+        Affiliate links: as an Amazon Associate we earn from qualifying
+        purchases.
+      </p>
       {intro && <p>{intro}</p>}
       <ul>
         {products.map((key) => {
@@ -34,10 +38,6 @@ export default function AffiliateBox({ title, intro, products, page }: Affiliate
           );
         })}
       </ul>
-      <p className="affiliate-disclosure">
-        As an Amazon Associate we earn from qualifying purchases. Links open
-        Amazon in a new tab.
-      </p>
     </aside>
   );
 }

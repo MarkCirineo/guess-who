@@ -812,7 +812,7 @@ body {
 }
 
 .content-card .affiliate-disclosure {
-  margin-top: 1rem;
+  margin-bottom: 0.6rem;
   font-size: 0.75rem;
   color: hsl(230, 10%, 50%);
 }
