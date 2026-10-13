@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AuthorByline from "@/components/AuthorByline";
 import AuthorBio from "@/components/AuthorBio";
+import AffiliateBox from "@/components/AffiliateBox";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata, articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
@@ -436,6 +437,12 @@ export default function BoardGamesArticle() {
             </p>
           </section>
 
+          <AffiliateBox
+            title="Prefer a physical copy?"
+            intro="Tabletop versions of several games on this list:"
+            products={["guessWhoOriginal", "battleship", "connectFour", "codenames"]}
+            page="best-free-online-board-games"
+          />
           <AuthorBio />
         </div>
         <Footer />

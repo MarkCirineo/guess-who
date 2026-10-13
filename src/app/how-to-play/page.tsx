@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
+import AffiliateBox from "@/components/AffiliateBox";
 import { pageMetadata, faqJsonLd } from "@/lib/seo";
 import { characters } from "@/lib/characters";
 
@@ -376,6 +377,13 @@ export default function HowToPlay() {
             format.
           </p>
         </section>
+
+        <AffiliateBox
+          title="Prefer the physical board?"
+          intro="The online version follows the same rules as the board game. If you'd rather play across a table, these are current listings:"
+          products={["guessWhoOriginal", "guessWhoClassic1980s", "guessWhoGrabAndGo", "guessWhoCardGame"]}
+          page="how-to-play"
+        />
       </div>
 
       <Footer />

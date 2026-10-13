@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AuthorByline from "@/components/AuthorByline";
 import AuthorBio from "@/components/AuthorBio";
+import AffiliateBox from "@/components/AffiliateBox";
 import JsonLd from "@/components/JsonLd";
 import { SHIP_DATE } from "@/lib/blog";
 import { pageMetadata, articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
@@ -356,6 +357,12 @@ export default function GuessWhoVariationsAndHouseRules() {
             still needed. If a variant stops being fun, that is normally why.
           </p>
         </section>
+        <AffiliateBox
+          title="Physical editions for house rules"
+          intro="Every variant above works on a physical board too. A few editions swap the faces for other sets:"
+          products={["guessWhoPeopleAndPets", "guessWhoAnimalFriends", "guessWhoDisneyPrincess", "guessWhoCardGame"]}
+          page="guess-who-variations-and-house-rules"
+        />
         <AuthorBio />
       </div>
       <Footer />

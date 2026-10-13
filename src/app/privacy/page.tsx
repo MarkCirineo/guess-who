@@ -43,7 +43,7 @@ export default function PrivacyPolicy() {
             marginBottom: "2rem",
           }}
         >
-          Last updated: June 21, 2026
+          Last updated: October 12, 2026
         </p>
 
         <Section title="Overview">
@@ -98,6 +98,18 @@ export default function PrivacyPolicy() {
           </p>
         </Section>
 
+        <Section title="Affiliate Links">
+          <p>
+            Some pages link to products on Amazon. As an Amazon Associate we
+            earn from qualifying purchases. These links are marked on the page
+            and open Amazon in a new tab. If you click one, Amazon may set
+            cookies to record that the visit came from this site; Amazon&apos;s
+            own privacy notice applies on their site. We don&apos;t receive any
+            information about who you are or what you buy, only aggregate
+            commission reports.
+          </p>
+        </Section>
+
         <Section title="Analytics">
           <p>
             We use a privacy-focused analytics tool to understand general usage
@@ -123,6 +135,9 @@ export default function PrivacyPolicy() {
             <li>
               <strong>Umami Analytics</strong> — privacy-focused, cookieless
               analytics
+            </li>
+            <li>
+              <strong>Amazon Associates</strong> — affiliate product links
             </li>
           </ul>
         </Section>

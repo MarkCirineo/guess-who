@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AuthorByline from "@/components/AuthorByline";
 import AuthorBio from "@/components/AuthorBio";
+import AffiliateBox from "@/components/AffiliateBox";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata, articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { SHIP_DATE } from "@/lib/blog";
@@ -436,6 +437,12 @@ export default function ClassroomArticle() {
             </p>
           </section>
 
+          <AffiliateBox
+            title="Physical guessing games"
+            intro="For a table without screens, these use the same yes-or-no question format:"
+            products={["guessWhoOriginal", "guessWhoAnimalFriends", "hedbanz", "guessIn10Animals"]}
+            page="guess-who-for-classrooms-and-families"
+          />
           <AuthorBio />
         </div>
         <Footer />
