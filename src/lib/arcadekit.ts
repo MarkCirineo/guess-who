@@ -1,10 +1,10 @@
 /**
- * Links to upcoming features on ArcadeKit's coming-soon page.
+ * Links to ArcadeKit: live features and the coming-soon page.
  *
  * The `feature` values are a fixed contract with arcadekit.games/coming-soon —
  * don't rename them without updating that page too.
  */
-export type ComingSoonFeature = "custom-boards" | "stats" | "packs";
+export type ComingSoonFeature = "custom-boards";
 
 export type CtaLocation = "game-over" | "waiting-room" | "home";
 
@@ -17,24 +17,28 @@ export const COMING_SOON_FEATURES: Record<
     label: "Play with your own photos",
     event: "cta-custom-boards",
   },
-  stats: {
-    emoji: "📊",
-    label: "Save your stats & streaks",
-    event: "cta-stats",
-  },
-  packs: {
-    emoji: "🎨",
-    label: "New themed boards",
-    event: "cta-packs",
-  },
 };
 
-export function comingSoonUrl(feature: ComingSoonFeature, location: CtaLocation): string {
-  const params = new URLSearchParams({
-    feature,
+function utm(location: CtaLocation): URLSearchParams {
+  return new URLSearchParams({
     utm_source: "playguesswho",
     utm_medium: "cta",
     utm_content: location,
   });
+}
+
+export function comingSoonUrl(feature: ComingSoonFeature, location: CtaLocation): string {
+  const params = new URLSearchParams({ feature, ...Object.fromEntries(utm(location)) });
   return `https://arcadekit.games/coming-soon?${params}`;
+}
+
+/**
+ * Rule Out board packs (live). Monster Mash is free with an account; Dogs and
+ * Fantasy are paid. Lands scrolled to Monster Mash, whose button starts a room
+ * with that board selected.
+ */
+export const PACKS_EVENT = "play-packs";
+
+export function packsUrl(location: CtaLocation): string {
+  return `https://arcadekit.games/games/rule-out/packs?${utm(location)}#monster-mash`;
 }
