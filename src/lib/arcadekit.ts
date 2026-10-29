@@ -12,10 +12,12 @@ export const COMING_SOON_FEATURES: Record<
   ComingSoonFeature,
   { emoji: string; label: string; event: string }
 > = {
+  // Reframed Oct 2026 from "your own photos" to a mix-and-match board maker
+  // (existing art, your own names). New event name keeps the two tests apart.
   "custom-boards": {
-    emoji: "📸",
-    label: "Play with your own photos",
-    event: "cta-custom-boards",
+    emoji: "🧩",
+    label: "Make your own board",
+    event: "cta-board-maker",
   },
 };
 
