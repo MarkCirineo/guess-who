@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { COMING_SOON_FEATURES, comingSoonUrl } from "@/lib/arcadekit";
+import { PACKS_EVENT, packsUrl } from "@/lib/arcadekit";
 
 /** Interactive create/join card on the homepage. */
 export default function HomeActions() {
@@ -80,7 +80,7 @@ export default function HomeActions() {
             📱 Local Pass & Play
           </button>
           <a
-            href={comingSoonUrl("custom-boards", "home")}
+            href={packsUrl("home")}
             target="_blank"
             rel="noopener"
             style={{
@@ -89,15 +89,12 @@ export default function HomeActions() {
               color: "hsl(35, 80%, 65%)",
               textDecoration: "none",
             }}
-            id="cta-custom-boards-home"
-            data-umami-event={COMING_SOON_FEATURES["custom-boards"].event}
+            id="play-packs-home"
+            data-umami-event={PACKS_EVENT}
             data-umami-event-location="home"
           >
-            {COMING_SOON_FEATURES["custom-boards"].emoji} Coming soon:{" "}
-            <span style={{ fontWeight: 600 }}>
-              {COMING_SOON_FEATURES["custom-boards"].label.toLowerCase()}
-            </span>{" "}
-            →
+            🎨 New:{" "}
+            <span style={{ fontWeight: 600 }}>themed boards on ArcadeKit</span> →
           </a>
         </div>
       ) : showCreate ? (
